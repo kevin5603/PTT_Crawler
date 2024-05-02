@@ -1,0 +1,19 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto21
+  build:
+    commands:
+      - ls -al
+      - echo '<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd"><localRepository/><interactiveMode/><offline/><pluginGroups/><servers/><mirrors><mirror><id>maven-default-http-blocker</id><mirrorOf>external:dont-match-anything-mate:*</mirrorOf><name>Pseudo repository to mirror external repositories initially using HTTP.</name><url>http://0.0.0.0/</url><blocked>false</blocked></mirror></mirrors><proxies/><profiles/><activeProfiles/></settings>' >> settings.xml
+      - java --version
+      - ./mvnw clean package -DskipTests=true -s settings.xml -e
+artifacts:
+  files:
+    - target/crawler-0.0.1-SNAPSHOT.jar
+  discard-paths: yes
+cache:
+  paths:
+    - '/root/.m2/**/*'

@@ -1,0 +1,32 @@
+swagger: '2.0'
+info:
+  description: 5555555Your first API with Amazon API Gateway. This is a sample API that integrates
+    via HTTP with our demo Pet Store endpoints
+  title: PetStore
+schemes:
+  - https
+paths:
+  "/ptt":
+    post:
+      description: Integration with the Line API
+      consumes:
+        - application/json
+      produces:
+        - text/html
+      responses:
+        '200':
+          description: Successful operation
+          headers:
+            Content-Type:
+              type: string
+              description: Media type of request
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        payloadFormatVersion: '1.0'
+        type: 'aws'
+        uri: 'arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:975049910219:function:my-ptt-crawler/invocations'
+        credentials : "arn:aws:iam::975049910219:role/super_apigateway"
+        responses:
+          default:
+            statusCode: '200'
+

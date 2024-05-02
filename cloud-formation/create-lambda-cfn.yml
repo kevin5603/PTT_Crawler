@@ -1,0 +1,138 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'ptt-crawler-cloudFormation'
+Parameters:
+  S3LambdaBucket:
+    Type: String
+    Default: 'todo-cloudformation-lambda-source'
+  S3LambdaObjectKey:
+    Type: String
+    Default: 'ptt-crawler-0.0.1-SNAPSHOT.jar'
+  S3LambdaLibObjectKey:
+    Type: String
+    Default: 'lib.zip'
+  ApiGatewayDeployStage:
+    Type: String
+    Default: 'dev'
+Resources:
+  MyLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: 'lambda.amazonaws.com'
+            Action: 'sts:AssumeRole'
+      Policies:
+        - PolicyName: AWSLambdaBasicExecutionRole-66666
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: 'logs:CreateLogGroup'
+                Resource: 'arn:aws:logs:*:*:*'
+              - Effect: Allow
+                Action:
+                  - 'logs:CreateLogStream'
+                  - 'logs:PutLogEvents'
+                Resource: 'arn:aws:logs:us-west-2:975049910219:log-group:/aws/lambda/my-ptt-crawler:*'
+      Description: 'Basic operation with AWS Lambda'
+      Tags:
+        - Key: 'ptt-crawler'
+          Value: 'dev'
+  MyLambdaScheduleRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: 'scheduler.amazonaws.com'
+            Action: 'sts:AssumeRole'
+      Policies:
+        - PolicyName: AWSEventScheduleBasicExecutionRole-66666
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: 'lambda:InvokeFunction'
+                Resource: !GetAtt [MyLambda, Arn]
+      Description: 'AWS Event Schedule invoke AWS Lambda'
+      Tags:
+        - Key: 'ptt-crawler'
+          Value: 'dev'
+  MyLambdaLib:
+    Type: AWS::Lambda::LayerVersion
+    Properties:
+      LayerName: 'my-ptt-crawler-lib'
+      CompatibleArchitectures:
+        - 'x86_64'
+      CompatibleRuntimes:
+        - 'java21'
+      Content:
+        S3Bucket: !Ref S3LambdaBucket
+        S3Key: !Ref S3LambdaLibObjectKey
+  MyLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: 'my-ptt-crawler'
+      Code:
+        S3Bucket: !Ref S3LambdaBucket
+        S3Key: !Ref S3LambdaObjectKey
+      Runtime: 'java21'
+      Environment:
+        Variables:
+          JAVA_TOOL_OPTIONS: '--add-opens=java.management/sun.management=ALL-UNNAMED'
+          CHANNEL_TOKEN: '{{resolve:ssm:/line/CHANNEL_TOKEN}}'
+          CHANNEL_SECRET: '{{resolve:ssm:/line/CHANNEL_SECRET}}'
+      Handler: 'com.kevin.crawler.handler.LambdaRequestHandler::handleRequest'
+      MemorySize: 256
+      Role: !GetAtt [MyLambdaRole, Arn]
+      Timeout: 30
+      Layers:
+        - !Ref MyLambdaLib
+      Tags:
+        - Key: 'ptt-crawler'
+          Value: 'dev'
+  MyLambdaSchedule:
+    UpdateReplacePolicy: "Retain"
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      Name: 'my-ptt-crawler-schedule'
+      FlexibleTimeWindow:
+        Mode: 'OFF'
+      ScheduleExpression: 'cron(*/10 * * * ? *)'
+      ScheduleExpressionTimezone: 'Asia/Taipei'
+      State: 'ENABLED'
+      Target:
+        Arn: !GetAtt [MyLambda, Arn]
+        RoleArn: !GetAtt [MyLambdaScheduleRole, Arn]
+  MyApiGateway:
+    UpdateReplacePolicy: "Retain"
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: 'my-ptt-crawler-api'
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+      DisableExecuteApiEndpoint: false
+      BodyS3Location:
+        Bucket: !Ref S3LambdaBucket
+        Key: 'api.yml'
+      Tags:
+        - Key: 'ptt-crawler'
+          Value: 'dev'
+  MyApiGatewayDeployment:
+    UpdateReplacePolicy: "Retain"
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      RestApiId: !Ref MyApiGateway
+      StageName: !Ref ApiGatewayDeployStage
+    DependsOn: [MyApiGateway]
+
+
+
+
+

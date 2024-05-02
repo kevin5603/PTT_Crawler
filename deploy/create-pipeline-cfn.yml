@@ -1,0 +1,173 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: practice-cloudformation
+Parameters:
+  GitHubOwner:
+    Type: String
+    Default: 'kevin5603'
+  GitHubRepo:
+    Type: String
+    Default: 'PTT_Crawler'
+  GitHubBranch:
+    Type: String
+    Default: 'main'
+  GitHubSecret:
+    Type: String
+    Default: '{{resolve:ssm-secure:GitHubSecret:1}}'
+Resources:
+  MyGitHubPipelineWebHook:
+    Type: AWS::CodePipeline::Webhook
+    Properties:
+      Authentication: GITHUB_HMAC
+      AuthenticationConfiguration:
+        SecretToken: !Ref GitHubSecret
+      Filters:
+        - JsonPath: '$.ref'
+          MatchEquals: 'refs/heads/main'
+      TargetAction: 'GitSource'
+      TargetPipeline: 'cloudformation-pipeline-demo'
+      TargetPipelineVersion: 1
+  MyCodeBuild:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: ptt-crawler
+      Artifacts:
+        Location: CODEPIPELINE
+        Type: CODEPIPELINE
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/standard:7.0
+        Type: LINUX_CONTAINER
+      Source:
+        Type: CODEPIPELINE
+      ServiceRole: !GetAtt [MyCodeBuildRole, Arn]
+  MyPipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      ArtifactStore:
+        Location: cloudformation-pipeline-source
+        Type: S3
+      Name: cloudformation-pipeline-demo
+      PipelineType: V1
+      RestartExecutionOnUpdate: true
+      RoleArn: !GetAtt [CloudFormationPipelineDemoRoleUsWest2, Arn]
+      Stages:
+        - Name: GitSource
+          Actions:
+            - Name: GitHub
+              ActionTypeId:
+                Category: Source
+                Owner: ThirdParty
+                Provider: GitHub
+                Version: '1'
+              Configuration:
+                Owner: !Ref GitHubOwner
+                Repo: !Ref GitHubRepo
+                Branch: !Ref GitHubBranch
+                OAuthToken: !Ref GitHubSecret
+              OutputArtifacts:
+                - Name: SourceCode
+        - Name: Build
+          Actions:
+            - Name: Build
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Provider: CodeBuild
+                Version: '1'
+              Configuration:
+                ProjectName: ptt-crawler
+                PrimarySource: SourceCode
+              InputArtifacts:
+                - Name: SourceCode
+              OutputArtifacts:
+                - Name: PackageToZip
+        - Name: S3Deploy
+          Actions:
+            - Name: My-S3-Deploy
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Provider: S3
+                Version: '1'
+              Configuration:
+                BucketName: deploy-source-2233
+                Extract: true
+              InputArtifacts:
+                - Name: PackageToZip
+  CloudFormationPipelineDemoRoleUsWest2:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: [ 'sts:AssumeRole' ]
+            Effect: Allow
+            Principal:
+              Service: [ codepipeline.amazonaws.com ]
+        Version: '2012-10-17'
+      Path: /
+      Policies:
+        - PolicyName: CodePipelineAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Action:
+                  - 's3:*'
+                  - 'cloudformation:CreateStack'
+                  - 'cloudformation:DescribeStacks'
+                  - 'cloudformation:DeleteStack'
+                  - 'cloudformation:UpdateStack'
+                  - 'cloudformation:CreateChangeSet'
+                  - 'cloudformation:ExecuteChangeSet'
+                  - 'cloudformation:DeleteChangeSet'
+                  - 'cloudformation:DescribeChangeSet'
+                  - 'cloudformation:SetStackPolicy'
+                  - 'iam:PassRole'
+                  - 'sns:Publish'
+                  - 'codebuild:StartBuild'
+                  - 'codebuild:BatchGetBuilds'
+                Effect: Allow
+                Resource: '*'
+  MyCodeBuildRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: /
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: [ 'sts:AssumeRole' ]
+            Effect: Allow
+            Principal:
+              Service: [ codebuild.amazonaws.com ]
+      Policies:
+        - PolicyName: CodeBuildAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Resource:
+                  - '*'
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+              - Effect: Allow
+                Resource:
+                  - '*'
+                Action:
+                  - s3:PutObject
+                  - s3:GetObject
+                  - s3:GetObjectVersion
+                  - s3:GetBucketAcl
+                  - s3:GetBucketLocation
+                  - s3:ListBucket
+              - Effect: Allow
+                Resource:
+                  - "*"
+                Action:
+                  - ec2:CreateNetworkInterface
+                  - ec2:DescribeDhcpOptions
+                  - ec2:DescribeNetworkInterfaces
+                  - ec2:DeleteNetworkInterface
+                  - ec2:DescribeSubnets
+                  - ec2:DescribeSecurityGroups
+                  - ec2:DescribeVpcs
+
