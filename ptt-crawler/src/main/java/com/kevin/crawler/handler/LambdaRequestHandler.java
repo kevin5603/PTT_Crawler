@@ -1,7 +1,5 @@
 package com.kevin.crawler.handler;
 
-import static software.amazon.awssdk.auth.credentials.internal.CredentialSourceType.ENVIRONMENT;
-
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -9,21 +7,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kevin.crawler.config.InitializeConfiguration;
 import com.kevin.crawler.model.Crawl;
 import com.kevin.crawler.model.KeywordCondition;
-import com.kevin.crawler.model.line.LineRequest;
 import com.kevin.crawler.model.line.LineRequestBody;
 import com.kevin.crawler.model.line.dto.LineInfoDto;
 import com.kevin.crawler.service.ArticleCrawler;
 import com.kevin.crawler.service.CrawlService;
-import com.linecorp.bot.messaging.client.MessagingApiClient;
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.CrawlController;
 import edu.uci.ics.crawler4j.fetcher.PageFetcher;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -46,8 +38,7 @@ public class LambdaRequestHandler implements RequestHandler<Map<String, Object>,
     long start = System.currentTimeMillis();
     try {
       log.info("爬蟲開始...");
-      LambdaRequestHandler handler = new LambdaRequestHandler();
-      List<Crawl> crawls = handler.crawlService.getCrawlList();
+      List<Crawl> crawls = this.crawlService.getCrawlList();
 
       ////////////// TODO 這區塊要在refactor
       if (input != null) {
@@ -79,16 +70,16 @@ public class LambdaRequestHandler implements RequestHandler<Map<String, Object>,
 
       /////////////////
 
-      CrawlController controller = handler.init(crawls);
+      CrawlController controller = this.init(crawls);
       CrawlController.WebCrawlerFactory<ArticleCrawler> factory = () -> new ArticleCrawler(
-        controller, crawls, finalDto);
+        crawls, finalDto);
       controller.start(factory, 1);
     } catch (Exception e) {
       log.error(e.getMessage());
     }
     long end = System.currentTimeMillis();
 
-    log.info("爬蟲結束...耗時:{}", (end - start)/1000.0);
+    log.info("爬蟲結束...耗時:{}", (end - start) / 1000.0);
     return "爬蟲結束...";
   }
 

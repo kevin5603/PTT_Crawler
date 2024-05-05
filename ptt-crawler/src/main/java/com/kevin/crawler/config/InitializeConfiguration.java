@@ -15,9 +15,8 @@ public class InitializeConfiguration {
     if (properties.isEmpty()) {
       ClassLoader classLoader = InitializeConfiguration.class.getClassLoader();
       InputStream inputStream = classLoader.getResourceAsStream("application.properties");
-
       if (inputStream == null) {
-        return null;
+        return properties;
       }
 
       try {

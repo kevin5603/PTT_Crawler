@@ -12,18 +12,20 @@ public class Article {
   private String title;
   private String link;
   private String content;
+  private String board;
 
   public Article() {
   }
 
   public Article(String id, String author, String createdDate, String title, String link,
-    String content) {
+    String content, String board) {
     this.id = id;
     this.author = author;
     this.createdDate = createdDate;
     this.title = title;
     this.link = link;
     this.content = content;
+    this.board = board;
   }
 
   @Override
@@ -35,6 +37,7 @@ public class Article {
       ", title='" + title + '\'' +
       ", link='" + link + '\'' +
       ", content='" + content + '\'' +
+      ", board='" + board + '\'' +
       '}';
   }
 
@@ -85,5 +88,13 @@ public class Article {
 
   public void setContent(String content) {
     this.content = content;
+  }
+
+  public String getBoard() {
+    return board;
+  }
+
+  public void setBoard(String board) {
+    this.board = board;
   }
 }

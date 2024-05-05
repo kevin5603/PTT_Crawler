@@ -53,7 +53,17 @@ public class PttArticleParser {
     article.setContent(content);
     article.setLink(link);
     log.info(createdDate);
-
     return article;
+  }
+
+  public List<Article> parseArticlesV2(String html) {
+    List<Article> list = new ArrayList<>();
+    Document doc = Jsoup.parse(html);
+    Elements elements = doc.select("div.r-ent div.title a");
+    for (Element element : elements) {
+      String link = URL_PREFIX + element.attr("href");
+//      list.add();
+    }
+    return list;
   }
 }

@@ -27,7 +27,6 @@ public class ArticleCrawler extends WebCrawler {
   private static final Logger log = LoggerFactory.getLogger(ArticleCrawler.class);
   private final static Pattern FILTERS = Pattern.compile(".*(\\.(css|js|gif|jpg"
     + "|png|mp3|mp4|zip|gz))$");
-  private final CrawlController crawlController;
   private final CrawlHistoryService crawlHistoryService = new CrawlHistoryService();
   private final AwsNotificationHelper notificationHelper = new AwsNotificationHelper();
   private final List<Crawl> crawls;
@@ -36,8 +35,7 @@ public class ArticleCrawler extends WebCrawler {
   LineNotificationService lineNotificationService = new LineNotificationService();
   private LineInfoDto dto;
 
-  public ArticleCrawler(CrawlController crawlController, List<Crawl> crawls, LineInfoDto dto) {
-    this.crawlController = crawlController;
+  public ArticleCrawler(List<Crawl> crawls, LineInfoDto dto) {
     this.crawls = crawls;
     this.dto = dto;
   }
@@ -80,7 +78,7 @@ public class ArticleCrawler extends WebCrawler {
                     log.info("已發送過訊息... 文章連結:{}", article.getLink());
                     continue;
                   }
-                  crawlController.addSeed(article.getLink());
+                  this.myController.addSeed(article.getLink());
                   Set<Crawl> orDefault = keywordCrawl.getOrDefault(article.getLink(),
                     new HashSet<>());
                   orDefault.add(crawl);

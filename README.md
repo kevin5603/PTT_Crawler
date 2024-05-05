@@ -71,6 +71,10 @@ lambda排程 (使用EventBridge 設定一分鐘爬一次)
 2. 對指定看板進行爬文並且確認該文章
 3. 把資料(文章標題/作者/連結/內文/推文？)存入db中
 
-
+# TODO list
+1. 重構PTT爬文章 lambda logic
+2. 重構查詢關鍵字 lambda logic
+3. line lambda logic
+4. use SAM CICD 
 
 
