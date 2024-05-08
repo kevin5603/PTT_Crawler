@@ -76,7 +76,6 @@ Resources:
                 Version: '1'
               Configuration:
                 ProjectName: ptt-crawler
-                PrimarySource: SourceCode
               InputArtifacts:
                 - Name: SourceCode
               OutputArtifacts:

@@ -9,3 +9,7 @@ Resources:
       Runtime: java21
       Architectures:
         - x86_64
+      Environment:
+        Variables:
+          CHANNEL_SECRET: 9d861fdf886e51440bc352c1d9842220
+          CHANNEL_TOKEN: +Jzn8o8o6IKsDl+6Kv6Qxq6SxnXEdt14khaMAQChVJp2MqB5mcGl642m6eV/SC1KGpibqJo1HFj1qCknOy3NR+o6IiUfr1Jc7pKzPNR/dQVTEMXc661+SF4BuxCk+hJADWytN2dRY9zkSAdeHjpmzgdB04t89/1O/w1cDnyilFU=

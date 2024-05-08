@@ -42,6 +42,6 @@ public class LineCommandDispatcherService {
   }
 
   private void sendReplyMessage(LineInfoDto dto, String message) {
-    lineNotificationService.replyMessage(dto.getReplyToken(), List.of(new TextMessage(message)));
+//    lineNotificationService.replyMessage(dto.getReplyToken(), List.of(new TextMessage(message)));
   }
 }

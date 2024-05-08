@@ -74,7 +74,7 @@ lambda排程 (使用EventBridge 設定一分鐘爬一次)
 # TODO list
 1. 重構PTT爬文章 lambda logic
 2. 重構查詢關鍵字 lambda logic
-3. line lambda logic
+3. line lambda logic -- 剩下DB的邏輯處理(還沒決定好DB要怎麼做)
 4. use SAM CICD 
 
 
