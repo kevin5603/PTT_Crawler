@@ -15,6 +15,10 @@ public class LineMessageHandler implements RequestHandler<Map<String, Object>, V
   private static final Logger log = LoggerFactory.getLogger(LineMessageHandler.class);
   private final LineCommandDispatcherService lineCommandDispatcherService = new LineCommandDispatcherService();
 
+  public static void main(String[] args) {
+    System.out.println("hello");
+  }
+
   @Override
   public Void handleRequest(Map<String, Object> input, Context context) {
     try {
