@@ -29,10 +29,21 @@ public class LineMessageHandler implements RequestHandler<APIGatewayProxyRequest
     try {
       log.info("LineMessageHandler 開始執行...");
       log.info("api input: {}", input);
+
+      String body = input.getBody();
+      log.info("api body: {}", body);
       ObjectMapper mapper = new ObjectMapper();
-      LineRequestBody request = mapper.convertValue(input, LineRequestBody.class);
-      LineInfoDto dto = request.toDto();
-      lineCommandDispatcherService.messageDispatcher(dto);
+      // TODO
+      try {
+        LineRequestBody request = mapper.convertValue(body, LineRequestBody.class);
+        LineInfoDto dto = request.toDto();
+        lineCommandDispatcherService.messageDispatcher(dto);
+      } catch (Exception e) {
+        log.error(e.getMessage());
+        return response
+          .withStatusCode(200)
+          .withBody("hello world!!!");
+      }
     } catch (Exception e) {
       e.printStackTrace();
       String errorMessage = e.getMessage();
