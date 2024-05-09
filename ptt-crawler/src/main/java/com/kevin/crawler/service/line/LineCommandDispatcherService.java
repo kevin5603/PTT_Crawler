@@ -2,6 +2,8 @@ package com.kevin.crawler.service.line;
 
 import com.kevin.crawler.model.LineConst;
 import com.kevin.crawler.model.line.dto.LineInfoDto;
+import com.linecorp.bot.messaging.model.TextMessage;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.slf4j.Logger;
@@ -10,7 +12,7 @@ import org.slf4j.LoggerFactory;
 public class LineCommandDispatcherService {
 
   private static final Logger log = LoggerFactory.getLogger(LineCommandDispatcherService.class);
-  private LineNotificationService lineNotificationService = new LineNotificationService();
+  private final LineNotificationService lineNotificationService = new LineNotificationService();
 
   public void messageDispatcher(LineInfoDto dto) {
     String message = dto.getMessage().getText();
@@ -36,11 +38,13 @@ public class LineCommandDispatcherService {
     } else if (matcher3.matches()) {
       sendReplyMessage(dto, LineConst.HELP_MESSAGE);
     } else {
-      sendReplyMessage(dto, LineConst.NOT_MATCH_MESSAGE);
+//      sendReplyMessage(dto, LineConst.NOT_MATCH_MESSAGE);
+      lineNotificationService.pushMessage("U1dd43c0f679ae057eecc17984fdb2970", message);
+
     }
   }
 
   private void sendReplyMessage(LineInfoDto dto, String message) {
-//    lineNotificationService.replyMessage(dto.getReplyToken(), List.of(new TextMessage(message)));
+    lineNotificationService.replyMessage(dto.getReplyToken(), List.of(new TextMessage(message)));
   }
 }

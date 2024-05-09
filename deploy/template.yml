@@ -1,0 +1,43 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Sample SAM Template for ptt crawler lambda & API endpoint
+Globals:
+  Function:
+    Timeout: 20
+    MemorySize: 512
+Resources:
+  PttCrawlerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../ptt-crawler
+      Handler: com.kevin.crawler.handler.LineMessageHandler::handleRequest
+      Runtime: java21
+      Architectures:
+      - arm64
+      MemorySize: 256
+      Environment:
+        Variables:
+          JAVA_TOOL_OPTIONS: '--add-opens=java.management/sun.management=ALL-UNNAMED'
+          CHANNEL_TOKEN: '{{resolve:ssm:/line/CHANNEL_TOKEN}}'
+          CHANNEL_SECRET: '{{resolve:ssm:/line/CHANNEL_SECRET}}'
+      Events:
+        HelloWorld:
+          Type: Api
+          Properties:
+            Path: /ptt
+            Method: POST
+      Layers:
+        - !Ref PttCrawlerLayer
+  PttCrawlerLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      ContentUri: ../ptt-crawler-lib
+      CompatibleRuntimes:
+        - java21
+    Metadata:
+      BuildMethod: java21
+Outputs:
+  PttCrawlerApi:
+    Description: "API Gateway endpoint URL for Prod stage for Ptt Crawler function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/ptt/"

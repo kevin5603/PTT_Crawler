@@ -25,7 +25,7 @@ Resources:
   CodeStarConnection:
     Type: AWS::CodeStarConnections::Connection
     Properties:
-      ConnectionName: GitRepositoryConnection-kevin
+      ConnectionName: PttCrawlerGitHub
       ProviderType: !Ref GitProviderType
   CodeBuildProjectBuildAndPackage:
     Type: AWS::CodeBuild::Project
