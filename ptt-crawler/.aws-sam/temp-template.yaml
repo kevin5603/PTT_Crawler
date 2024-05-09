@@ -8,7 +8,7 @@ Resources:
       CodeUri: /Users/kevin.lee/Documents/work/project/ptt-crawler-project/ptt-crawler
       Runtime: java21
       Architectures:
-        - x86_64
+        - arm64
       Environment:
         Variables:
           CHANNEL_SECRET: 9d861fdf886e51440bc352c1d9842220

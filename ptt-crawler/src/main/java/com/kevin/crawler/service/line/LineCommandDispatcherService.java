@@ -2,14 +2,13 @@ package com.kevin.crawler.service.line;
 
 import com.kevin.crawler.model.LineConst;
 import com.kevin.crawler.model.line.dto.LineInfoDto;
-import com.linecorp.bot.messaging.model.TextMessage;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class LineCommandDispatcherService {
+
   private static final Logger log = LoggerFactory.getLogger(LineCommandDispatcherService.class);
   private LineNotificationService lineNotificationService = new LineNotificationService();
 

@@ -1,0 +1,16 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      java: corretto21
+  build:
+    commands:
+      - echo ${ENV_CLOUDFORMATION_EXECUTION_ROLE}
+      - ./assume-role.sh deploy
+      - sam deploy --stack-name ${ENV_STACK_NAME}
+                    --template ${ENV_PACKAGE_TEMPLATE}
+                    --capabilities CAPABILITY_IAM
+                    --region ${ENV_REGION}
+                    --s3-bucket ${ENV_BUCKET}
+                    --no-fail-on-empty-changeset
+                    --role-arn ${ENV_CLOUDFORMATION_EXECUTION_ROLE}
