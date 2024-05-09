@@ -20,7 +20,7 @@ Resources:
         Variables:
           JAVA_TOOL_OPTIONS: '--add-opens=java.management/sun.management=ALL-UNNAMED'
       Layers:
-        !Ref PttCrawlerLayer
+        - !Ref PttCrawlerLayer
     Metadata:
       BuildMethod: makefile
   LineHandlerFunction:
@@ -44,7 +44,7 @@ Resources:
             Path: /ptt
             Method: POST
       Layers:
-        !Ref PttCrawlerLayer
+        - !Ref PttCrawlerLayer
     Metadata:
       BuildMethod: makefile
   PttCrawlerLayer:
