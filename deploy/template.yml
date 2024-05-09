@@ -27,16 +27,6 @@ Resources:
           Properties:
             Path: /ptt
             Method: POST
-      Layers:
-        - !Ref PttCrawlerLayer
-    Metadata:
-      BuildMethod: makefile
-  PttCrawlerLayer:
-    Type: AWS::Serverless::LayerVersion
-    Properties:
-      ContentUri: ../ptt-crawler-lib
-      CompatibleRuntimes:
-        - java21
     Metadata:
       BuildMethod: makefile
 Outputs:
