@@ -5,21 +5,25 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.kevin.crawler.model.line.LineRequestBody;
 import com.kevin.crawler.model.line.dto.LineInfoDto;
 import com.kevin.crawler.service.line.LineCommandDispatcherService;
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class LineMessageHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
+public class LineMessageHandler implements
+  RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
   private static final Logger log = LoggerFactory.getLogger(LineMessageHandler.class);
   private final LineCommandDispatcherService lineCommandDispatcherService = new LineCommandDispatcherService();
 
   @Override
-  public APIGatewayProxyResponseEvent handleRequest(final APIGatewayProxyRequestEvent input, final Context context) {
+  public APIGatewayProxyResponseEvent handleRequest(final APIGatewayProxyRequestEvent input,
+    final Context context) {
     Map<String, String> headers = new HashMap<>();
     headers.put("Content-Type", "application/json");
     headers.put("X-Custom-Header", "application/json");
@@ -33,17 +37,9 @@ public class LineMessageHandler implements RequestHandler<APIGatewayProxyRequest
       String body = input.getBody();
       log.info("api body: {}", body);
       ObjectMapper mapper = new ObjectMapper();
-      // TODO
-      try {
-        LineRequestBody request = mapper.convertValue(body, LineRequestBody.class);
-        LineInfoDto dto = request.toDto();
-        lineCommandDispatcherService.messageDispatcher(dto);
-      } catch (Exception e) {
-        log.error(e.getMessage());
-        return response
-          .withStatusCode(200)
-          .withBody("hello world!!!");
-      }
+      LineRequestBody request = mapper.readValue(body, LineRequestBody.class);
+      LineInfoDto dto = request.toDto();
+      lineCommandDispatcherService.messageDispatcher(dto);
     } catch (Exception e) {
       e.printStackTrace();
       String errorMessage = e.getMessage();
@@ -57,6 +53,15 @@ public class LineMessageHandler implements RequestHandler<APIGatewayProxyRequest
     return response
       .withStatusCode(200)
       .withBody(output);
+  }
+
+  public String toString(Object obj) {
+    try (StringWriter w = new StringWriter();) {
+      new ObjectMapper().configure(SerializationFeature.INDENT_OUTPUT, true).writeValue(w, obj);
+      return w.toString();
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 
 }
