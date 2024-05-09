@@ -38,7 +38,7 @@ public class LineMessageHandler implements
       log.info("api body: {}", body);
       ObjectMapper mapper = new ObjectMapper();
       LineRequestBody request = mapper.readValue(body, LineRequestBody.class);
-      if (request.getEvents().isEmpty()) {
+      if (request != null && !request.getEvents().isEmpty()) {
         LineInfoDto dto = request.toDto();
         lineCommandDispatcherService.messageDispatcher(dto);
       }
