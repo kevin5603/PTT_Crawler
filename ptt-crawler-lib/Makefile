@@ -1,2 +1,2 @@
 build-PttCrawlerLayer:
-	@ mvn clean package -s settings.xml
+	@ mvn clean install -s settings.xml
