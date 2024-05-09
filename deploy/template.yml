@@ -11,6 +11,22 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ../ptt-crawler
+      Handler: com.kevin.crawler.handler.CrawlerHandler::handleRequest
+      Runtime: java21
+      Architectures:
+        - arm64
+      MemorySize: 256
+      Environment:
+        Variables:
+          JAVA_TOOL_OPTIONS: '--add-opens=java.management/sun.management=ALL-UNNAMED'
+      Layers:
+        !Ref PttCrawlerLayer
+    Metadata:
+      BuildMethod: makefile
+  LineHandlerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../ptt-crawler
       Handler: com.kevin.crawler.handler.LineMessageHandler::handleRequest
       Runtime: java21
       Architectures:
@@ -27,6 +43,16 @@ Resources:
           Properties:
             Path: /ptt
             Method: POST
+      Layers:
+        !Ref PttCrawlerLayer
+    Metadata:
+      BuildMethod: makefile
+  PttCrawlerLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      ContentUri: ../ptt-crawler-lib
+      CompatibleRuntimes:
+        - java21
     Metadata:
       BuildMethod: makefile
 Outputs:
