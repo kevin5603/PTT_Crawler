@@ -29,6 +29,8 @@ Resources:
             Method: POST
       Layers:
         - !Ref PttCrawlerLayer
+    Metadata:
+      BuildMethod: makefile
   PttCrawlerLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
@@ -36,7 +38,7 @@ Resources:
       CompatibleRuntimes:
         - java21
     Metadata:
-      BuildMethod: java21
+      BuildMethod: makefile
 Outputs:
   PttCrawlerApi:
     Description: "API Gateway endpoint URL for Prod stage for Ptt Crawler function"
