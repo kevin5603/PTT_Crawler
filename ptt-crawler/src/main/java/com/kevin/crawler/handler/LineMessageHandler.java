@@ -38,8 +38,10 @@ public class LineMessageHandler implements
       log.info("api body: {}", body);
       ObjectMapper mapper = new ObjectMapper();
       LineRequestBody request = mapper.readValue(body, LineRequestBody.class);
-      LineInfoDto dto = request.toDto();
-      lineCommandDispatcherService.messageDispatcher(dto);
+      if (request.getEvents().isEmpty()) {
+        LineInfoDto dto = request.toDto();
+        lineCommandDispatcherService.messageDispatcher(dto);
+      }
     } catch (Exception e) {
       e.printStackTrace();
       String errorMessage = e.getMessage();
