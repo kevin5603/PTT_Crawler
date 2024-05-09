@@ -22,7 +22,7 @@ Resources:
           CHANNEL_TOKEN: '{{resolve:ssm:/line/CHANNEL_TOKEN}}'
           CHANNEL_SECRET: '{{resolve:ssm:/line/CHANNEL_SECRET}}'
       Events:
-        HelloWorld:
+        PttCrawlerApi:
           Type: Api
           Properties:
             Path: /ptt
