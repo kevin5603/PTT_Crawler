@@ -5,7 +5,7 @@ Parameters:
     Default: "GitHub"
   FullRepositoryId:
     Type: String
-    Default: "kevin5603/ptt-crawler-project"
+    Default: "kevin5603/PTT_Crawler"
   MainGitBranch:
     Type: String
     Default: "main"
