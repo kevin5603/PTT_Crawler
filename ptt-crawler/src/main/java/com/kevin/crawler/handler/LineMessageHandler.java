@@ -27,15 +27,12 @@ public class LineMessageHandler implements
     Map<String, String> headers = new HashMap<>();
     headers.put("Content-Type", "application/json");
     headers.put("X-Custom-Header", "application/json");
-
     APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent()
       .withHeaders(headers);
     try {
       log.info("LineMessageHandler 開始執行...");
       log.info("api input: {}", input);
-
       String body = input.getBody();
-      log.info("api body: {}", body);
       ObjectMapper mapper = new ObjectMapper();
       LineRequestBody request = mapper.readValue(body, LineRequestBody.class);
       if (request != null && !request.getEvents().isEmpty()) {
@@ -56,14 +53,4 @@ public class LineMessageHandler implements
       .withStatusCode(200)
       .withBody(output);
   }
-
-  public String toString(Object obj) {
-    try (StringWriter w = new StringWriter();) {
-      new ObjectMapper().configure(SerializationFeature.INDENT_OUTPUT, true).writeValue(w, obj);
-      return w.toString();
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-  }
-
 }

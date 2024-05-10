@@ -38,9 +38,7 @@ public class LineCommandDispatcherService {
     } else if (matcher3.matches()) {
       sendReplyMessage(dto, LineConst.HELP_MESSAGE);
     } else {
-//      sendReplyMessage(dto, LineConst.NOT_MATCH_MESSAGE);
-      lineNotificationService.pushMessage("U1dd43c0f679ae057eecc17984fdb2970", message);
-
+      sendReplyMessage(dto, LineConst.NOT_MATCH_MESSAGE);
     }
   }
 
