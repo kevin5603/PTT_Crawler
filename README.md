@@ -44,15 +44,15 @@ CrawlHistory 記錄以爬蟲的資料避免重複發送通知
 -- 
 
 # 技術
-aws s3 (Store)
+aws Lambda (Business logic)
+aws s3 (Storage)
+aws DynamicDB (Storage)
+aws API Gateway (串接line API)
 aws CloudWatch (log)
 aws EventBridge (schedule)
-aws Lambda (Business logic)
-aws DynamicDB (Store)
-aws API Gateway (串接line API)
-aws Cloudformation (Ioc)
+aws SAM (CICD)
+aws Cloudformation (CICD)
 aws CodeBuild (CICD)
-aws CodeDeploy (CICD)
 aws SQS (還沒做 - 目前預想是API gateway打到SQS -> lambda)
 
 
@@ -75,6 +75,4 @@ lambda排程 (使用EventBridge 設定一分鐘爬一次)
 1. 重構PTT爬文章 lambda logic
 2. 重構查詢關鍵字 lambda logic
 3. line lambda logic -- 剩下DB的邏輯處理(還沒決定好DB要怎麼做)
-4. use SAM CICD 
-
 

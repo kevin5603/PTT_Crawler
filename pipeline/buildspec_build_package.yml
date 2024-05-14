@@ -5,10 +5,7 @@ phases:
       java: corretto21
   build:
     commands:
-      - ls -al
-      - echo ${SAM_DEPLOY_TEMPLATE_PATH}
       - sam build --template ${SAM_DEPLOY_TEMPLATE_PATH}
-      - ls -al
       - ./assume-role.sh ${BUILD_PIPELINE_EXECUTION_ROLE} build-package
       - sam package --s3-bucket ${BUILD_ARTIFACT_BUCKET}
         --region ${BUILD_REGION}
