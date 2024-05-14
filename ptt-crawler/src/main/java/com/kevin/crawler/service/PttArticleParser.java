@@ -42,7 +42,6 @@ public class PttArticleParser {
 
     Article article = new Article();
     String content = doc.select("div#main-content").getFirst().ownText();
-    article.setContent(content);
     String author = doc.select(tag).first().ownText().replaceAll("\\(.*?\\)", "").trim();
     String title = doc.select(tag).get(1).ownText();
     String createdDate = doc.select(tag).last().ownText();
@@ -59,10 +58,12 @@ public class PttArticleParser {
   public List<Article> parseArticlesV2(String html) {
     List<Article> list = new ArrayList<>();
     Document doc = Jsoup.parse(html);
-    Elements elements = doc.select("div.r-ent div.title a");
+    Elements elements = doc.select("div.r-ent");
     for (Element element : elements) {
-      String link = URL_PREFIX + element.attr("href");
-//      list.add();
+      String link = URL_PREFIX + element.select("div.title a").attr("href");
+      String author = element.select("div.meta div.author").text();
+      String title = element.select("div.title a").text();
+      list.add(new Article(link, author, title));
     }
     return list;
   }

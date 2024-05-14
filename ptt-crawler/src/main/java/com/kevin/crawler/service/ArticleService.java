@@ -26,7 +26,7 @@ public class ArticleService {
     });
   }
 
-  private List<LineNotifyDto> filterBySentHistory(List<LineNotifyDto> lineNotifyDto) {
+  public List<LineNotifyDto> filterBySentHistory(List<LineNotifyDto> lineNotifyDto) {
     List<SentHistory> allSentHistory = getAllSentHistory();
     return lineNotifyDto.stream()
       .filter(dto -> allSentHistory.contains(dto.getLineId() + "::" + dto.getLink())).toList();
@@ -36,5 +36,7 @@ public class ArticleService {
     return sentHistoryRepository.getAllItem();
   }
 
-
+  public void save(Article article) {
+    articleRepository.saveItem(article);
+  }
 }

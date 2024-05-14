@@ -24,6 +24,25 @@ Resources:
       Role: !GetAtt ExecutionLambdaRole.Arn
     Metadata:
       BuildMethod: makefile
+  ArticleMatcherFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../ptt-crawler
+      Handler: com.kevin.crawler.handler.ArticleMatcherHandler::handleRequest
+      Runtime: java21
+      Architectures:
+        - arm64
+      MemorySize: 256
+      Environment:
+        Variables:
+          JAVA_TOOL_OPTIONS: '--add-opens=java.management/sun.management=ALL-UNNAMED'
+          CHANNEL_TOKEN: '{{resolve:ssm:/line/CHANNEL_TOKEN}}'
+          CHANNEL_SECRET: '{{resolve:ssm:/line/CHANNEL_SECRET}}'
+      Layers:
+        - !Ref PttCrawlerLayer
+      Role: !GetAtt ExecutionLambdaRole.Arn
+    Metadata:
+      BuildMethod: makefile
   LineHandlerFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -46,6 +65,7 @@ Resources:
             Method: POST
       Layers:
         - !Ref PttCrawlerLayer
+      Role: !GetAtt ExecutionLambdaRole.Arn
     Metadata:
       BuildMethod: makefile
   PttCrawlerLayer:

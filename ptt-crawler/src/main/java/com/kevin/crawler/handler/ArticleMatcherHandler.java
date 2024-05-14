@@ -27,20 +27,6 @@ public class ArticleMatcherHandler implements RequestHandler<Map<String, Object>
   private final KeywordService keywordService = new KeywordService();
   private final ArticleService articleService = new ArticleService();
 
-  public static void main(String[] args) {
-//    ArticleRepository a = new ArticleRepository();
-//    a.saveItem(new Article("kevin", "", "title1", "link1", "content", "life"));
-//    a.saveItem(new Article("kevin", "", "title2", "link2", "content", "life"));
-//    a.saveItem(new Article("kevin", "", "title3", "link3", "content", "life"));
-//    a.saveItem(new Article("kevin", "", "title4", "link4", "content", "life"));
-
-//    KeywordRepository k = new KeywordRepository();
-//    k.saveItem(new Keyword("life", List.of(new KeywordCondition("line1", "title1"))));
-
-    ArticleMatcherHandler a = new ArticleMatcherHandler();
-    a.handleRequest(null, null);
-  }
-
   /**
    * @param input   The Lambda Function input
    * @param context The Lambda execution environment context object.
@@ -58,10 +44,13 @@ public class ArticleMatcherHandler implements RequestHandler<Map<String, Object>
 
     // 利用上面的看版list把符合條件的看板文章也撈出來
     List<LineNotifyDto> lineNotifyDtos = getLineNotifyDtos(boards, groupByBoard);
+    lineNotifyDtos = articleService.filterBySentHistory(lineNotifyDtos);
 
-    addToHistory(lineNotifyDtos);
-    // 依序查詢是否有命中關鍵字，如果有則存到一個待發送物件(裡面應該要有lineId, ptt link, title)list
-    notifyUser(lineNotifyDtos);
+    if (!lineNotifyDtos.isEmpty()) {
+      addToHistory(lineNotifyDtos);
+      // 依序查詢是否有命中關鍵字，如果有則存到一個待發送物件(裡面應該要有lineId, ptt link, title)list
+      notifyUser(lineNotifyDtos);
+    }
 
     long end = System.currentTimeMillis();
     log.info("爬蟲結束...耗時: {}秒", (end - start) / 1000.0);

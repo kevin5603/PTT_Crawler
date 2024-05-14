@@ -16,6 +16,12 @@ public class Article {
   public Article() {
   }
 
+  public Article(String link, String author, String title) {
+    this.link = link;
+    this.author = author;
+    this.title = title;
+  }
+
   public Article(String author, String createdDate, String title, String link,
     String content, String board) {
     this.link = link;
