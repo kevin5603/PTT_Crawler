@@ -15,5 +15,6 @@ echo
 echo stack-name: "$stackName"
 echo region: "$region"
 echo "開始部署pipeline..."
-aws cloudformation create-stack --stack-name "$stackName" --template-body file://infrastructure/codepipeline.yml --capabilities CAPABILITY_IAM --region "$region"
-echo "結束部署pipeline..."
+aws cloudformation create-stack \
+--parameters ParameterKey=PipelineStackName,ParameterValue="$stackName" \
+--stack-name "$stackName" --template-body file://infrastructure/codepipeline.yml --capabilities CAPABILITY_IAM --region "$region"

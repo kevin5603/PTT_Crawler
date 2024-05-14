@@ -17,10 +17,13 @@ Parameters:
     Default: "us-west-2"
   DeployLambdaStackName:
     Type: String
-    Default: "ptt-crawler-lambda-stack"
+    Default: "ptt-crawler-function-stack"
   PackageTemplate:
     Type: String
     Default: "package.yml"
+  PipelineStackName:
+    Type: String
+    Default: "ptt-crawler-pipeline-stack"
 Resources:
   CodeStarConnection:
     Type: AWS::CodeStarConnections::Connection
@@ -46,6 +49,8 @@ Resources:
             Value: !Ref BuildRegion
           - Name: BUILD_ARTIFACT_BUCKET
             Value: !Ref BuildArtifactsBucket
+          - Name: DEPLOY_PIPELINE_STACK_NAME
+            Value: !Ref PipelineStackName
       ServiceRole: !GetAtt CodeBuildServiceRole.Arn
       Source:
         Type: CODEPIPELINE

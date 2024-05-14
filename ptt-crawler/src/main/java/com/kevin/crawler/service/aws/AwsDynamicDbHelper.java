@@ -34,9 +34,9 @@ public class AwsDynamicDbHelper {
     AwsDynamicDbHelper awsDynamicDbHelper = new AwsDynamicDbHelper();
 
     AwsCredentialHelper credentialHelper = new AwsCredentialHelper();
-    IdentityProvider provider = credentialHelper.getProvider();
+//    IdentityProvider provider = credentialHelper.getProvider();
     DynamoDbClient ddb = DynamoDbClient.builder()
-      .credentialsProvider(provider)
+//      .credentialsProvider(provider)
       .region(Region.US_WEST_2)
       .build();
 

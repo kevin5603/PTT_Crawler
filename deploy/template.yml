@@ -21,6 +21,7 @@ Resources:
           JAVA_TOOL_OPTIONS: '--add-opens=java.management/sun.management=ALL-UNNAMED'
       Layers:
         - !Ref PttCrawlerLayer
+      Role: !GetAtt ExecutionLambdaRole.Arn
     Metadata:
       BuildMethod: makefile
   LineHandlerFunction:
@@ -55,6 +56,35 @@ Resources:
         - java21
     Metadata:
       BuildMethod: makefile
+  ExecutionLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: [ 'sts:AssumeRole' ]
+            Effect: 'Allow'
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+        Version: '2012-10-17'
+      Path: /
+      Policies:
+        - PolicyName: CodePipelineAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Action:
+                  - 'lambda:*'
+                Effect: Allow
+                Resource: '*'
+        - PolicyName: DynamoDbAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Action:
+                  - 'dynamodb:*'
+                Effect: Allow
+                Resource: '*'
 Outputs:
   PttCrawlerApi:
     Description: "API Gateway endpoint URL for Prod stage for Ptt Crawler function"

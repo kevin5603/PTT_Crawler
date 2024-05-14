@@ -4,9 +4,7 @@ import com.kevin.crawler.model.Article;
 import com.kevin.crawler.model.Crawl;
 import com.kevin.crawler.model.KeywordCondition;
 import com.kevin.crawler.model.line.dto.LineInfoDto;
-import com.kevin.crawler.service.aws.AwsNotificationHelper;
 import com.kevin.crawler.service.line.LineNotificationService;
-import edu.uci.ics.crawler4j.crawler.CrawlController;
 import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.crawler.WebCrawler;
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
@@ -28,7 +26,6 @@ public class ArticleCrawler extends WebCrawler {
   private final static Pattern FILTERS = Pattern.compile(".*(\\.(css|js|gif|jpg"
     + "|png|mp3|mp4|zip|gz))$");
   private final CrawlHistoryService crawlHistoryService = new CrawlHistoryService();
-  private final AwsNotificationHelper notificationHelper = new AwsNotificationHelper();
   private final List<Crawl> crawls;
   private final PttArticleParser parser = new PttArticleParser();
   Map<String, Set<Crawl>> keywordCrawl = new HashMap<>();

@@ -16,12 +16,12 @@ public class AwsCredentialHelper {
 
   public static void init() {
     if (provider == null) {
-      Properties p = InitializeConfiguration.initializeConfig();
-      String accessKey = p.getProperty("AWS_ACCESS_KEY_ID");
-      String secretKey = p.getProperty("AWS_SECRET_KEY_ID");
-      AwsBasicCredentials credentials = AwsBasicCredentials.builder().accessKeyId(accessKey)
-        .secretAccessKey(secretKey).build();
-      provider = StaticCredentialsProvider.create(credentials);
+//      Properties p = InitializeConfiguration.initializeConfig();
+//      String accessKey = p.getProperty("AWS_ACCESS_KEY_ID");
+//      String secretKey = p.getProperty("AWS_SECRET_KEY_ID");
+//      AwsBasicCredentials credentials = AwsBasicCredentials.builder().accessKeyId(accessKey)
+//        .secretAccessKey(secretKey).build();
+//      provider = StaticCredentialsProvider.create(credentials);
     }
   }
 
