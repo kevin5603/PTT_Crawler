@@ -107,6 +107,11 @@ Resources:
                 ChangeSetName: !Sub ${AWS::StackName}-ChangeSet
                 TemplatePath: SourceCodeAsZip::infrastructure/codepipeline.yml
                 Capabilities: CAPABILITY_NAMED_IAM
+                ParameterOverrides: !Sub |
+                  {
+                    {"name": "PipelineStackName", "value": "${PipelineStackName}"},
+                    {"name": "TEST", "value": "HELLO_WORLD"}
+                  }
               InputArtifacts:
                 - Name: SourceCodeAsZip
               RunOrder: 1
@@ -175,6 +180,7 @@ Resources:
   PipelineArtifactsBucket:
     Type: AWS::S3::Bucket
     UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
     Properties:
       VersioningConfiguration:
         Status: Suspended
