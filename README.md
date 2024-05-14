@@ -76,3 +76,12 @@ lambda排程 (使用EventBridge 設定一分鐘爬一次)
 2. 重構查詢關鍵字 lambda logic
 3. line lambda logic -- 剩下DB的邏輯處理(還沒決定好DB要怎麼做)
 
+# create pipeline
+create pipeline
+```
+./infrastructure/script/create-pipeline-stack.sh $stackName $region
+```
+delete pipeline
+```
+./infrastructure/script/delete-pipeline-stack.sh $stackName $region
+```
