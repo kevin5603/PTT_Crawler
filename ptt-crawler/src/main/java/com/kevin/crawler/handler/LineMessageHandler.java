@@ -22,24 +22,32 @@ public class LineMessageHandler implements
 
   @Override
   public APIGatewayProxyResponseEvent handleRequest(final APIGatewayProxyRequestEvent request, final Context context) {
+    long start = System.currentTimeMillis();
     APIGatewayProxyResponseEvent response = createAPIGatewayResponse();
     try {
       log.info("LineMessageHandler 開始執行...");
       log.info("api request: {}", request);
       processRequest(request);
+
+      String completionMessage = "LineMessageHandler 執行結束...";
+      log.info(completionMessage);
+      response.setBody(completionMessage);
+      response.setStatusCode(200);
     } catch (Exception e) {
-      e.printStackTrace();
-      String errorMessage = e.getMessage();
-      log.error(errorMessage);
-      return response
-        .withBody(errorMessage)
-        .withStatusCode(500);
+      String errorMessage = handleException(e);
+      response.setBody(errorMessage);
+      response.setStatusCode(500);
     }
-    String output = "LineMessageHandler 執行結束...";
-    log.info(output);
-    return response
-      .withStatusCode(200)
-      .withBody(output);
+    long end = System.currentTimeMillis();
+    log.info("爬蟲結束...耗時: {}秒", (end - start) / 1000.0);
+    return response;
+  }
+
+  private static String handleException(Exception e) {
+    e.printStackTrace();
+    String errorMessage = e.getMessage();
+    log.error(errorMessage);
+    return errorMessage;
   }
 
   private void processRequest(APIGatewayProxyRequestEvent request) throws JsonProcessingException {
@@ -52,7 +60,7 @@ public class LineMessageHandler implements
     }
   }
 
-  private static APIGatewayProxyResponseEvent createAPIGatewayResponse() {
+  private APIGatewayProxyResponseEvent createAPIGatewayResponse() {
     Map<String, String> headers = new HashMap<>();
     headers.put("Content-Type", "application/json");
     headers.put("X-Custom-Header", "application/json");

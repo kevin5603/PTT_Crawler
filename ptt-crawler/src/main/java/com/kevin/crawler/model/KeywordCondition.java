@@ -6,7 +6,7 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbParti
 @DynamoDbBean
 public class KeywordCondition {
 
-  private Integer id;
+  private String userId;
   // 1 - author 2 - subject 3 - content 4 - push
   private Integer pttConditionType;
   private String keyword;
@@ -14,8 +14,8 @@ public class KeywordCondition {
   public KeywordCondition() {
   }
 
-  public KeywordCondition(Integer id, Integer pttConditionType, String keyword) {
-    this.id = id;
+  public KeywordCondition(String userId, Integer pttConditionType, String keyword) {
+    this.userId = userId;
     this.pttConditionType = pttConditionType;
     this.keyword = keyword;
   }
@@ -23,19 +23,19 @@ public class KeywordCondition {
   @Override
   public String toString() {
     return "KeywordCondition{" +
-      "id=" + id +
+      "userId=" + userId +
       ", pttConditionType=" + pttConditionType +
       ", keyword='" + keyword + '\'' +
       '}';
   }
 
   @DynamoDbPartitionKey
-  public Integer getId() {
-    return id;
+  public String getUserId() {
+    return userId;
   }
 
-  public void setId(Integer id) {
-    this.id = id;
+  public void setUserId(String userId) {
+    this.userId = userId;
   }
 
   public Integer getPttConditionType() {

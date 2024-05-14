@@ -45,7 +45,7 @@ public class LambdaRequestHandler implements RequestHandler<Map<String, Object>,
         log.info("輸入值: {}", input);
         if (input.containsKey("keyword")) {
           String forceKeyword = (String) input.get("keyword");
-          crawls.getFirst().getKeywordConditionList().add(new KeywordCondition(3, 2, forceKeyword));
+          crawls.getFirst().getKeywordConditionList().add(new KeywordCondition("3", 2, forceKeyword));
           log.info("{}\r\n臨時增加關鍵字: {}", crawls, forceKeyword);
         }
       }
@@ -62,7 +62,7 @@ public class LambdaRequestHandler implements RequestHandler<Map<String, Object>,
           dto = request.toDto();
           log.info("dto：{}", dto);
           String text = request.getEvents().getFirst().getMessage().getText();
-          crawls.getFirst().getKeywordConditionList().add(new KeywordCondition(4, 2, text));
+          crawls.getFirst().getKeywordConditionList().add(new KeywordCondition("4", 2, text));
           log.info("{}\r\n從line傳來臨時增加的關鍵字: {}", crawls, text);
         }
       }
