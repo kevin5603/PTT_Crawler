@@ -5,7 +5,6 @@ phases:
       java: corretto21
   build:
     commands:
-      - echo ${ENV_CLOUDFORMATION_EXECUTION_ROLE}
       - ./assume-role.sh deploy
       - sam deploy --stack-name ${ENV_STACK_NAME}
                     --template ${ENV_PACKAGE_TEMPLATE}

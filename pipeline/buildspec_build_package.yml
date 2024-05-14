@@ -5,7 +5,6 @@ phases:
       java: corretto21
   build:
     commands:
-      - echo my pipeline stack name ${DEPLOY_PIPELINE_STACK_NAME}...
       - dynamoDbArn=$(aws cloudformation describe-stacks --stack-name ${DEPLOY_PIPELINE_STACK_NAME} --query 'Stacks[0].Outputs[?OutputKey == `DynamoDbArn`].OutputValue' --output text)
       - echo my dynamoDbArn is ${dynamoDbArn}
       - sam build --template ${SAM_DEPLOY_TEMPLATE_PATH}
@@ -18,3 +17,6 @@ artifacts:
     - ${ENV_PACKAGE_TEMPLATE}
     - assume-role.sh
     - pipeline/*
+cache:
+  paths:
+    - '/root/.m2/**/*'
