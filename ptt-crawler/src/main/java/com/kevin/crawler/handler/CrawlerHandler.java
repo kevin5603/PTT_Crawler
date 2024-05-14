@@ -17,7 +17,6 @@ public class CrawlerHandler implements RequestHandler<Map<String, Object>, Strin
 
   @Override
   public String handleRequest(Map<String, Object> input, Context context) {
-    log.info("without access key!!!");
     HelloRepository helloRepository = new HelloRepository();
     helloRepository.saveItem(new Hello("myLineId", "kevin5603"));
     System.out.println(helloRepository.getAllItem());
