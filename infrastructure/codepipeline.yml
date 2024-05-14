@@ -109,8 +109,7 @@ Resources:
                 Capabilities: CAPABILITY_NAMED_IAM
                 ParameterOverrides: !Sub |
                   {
-                    "PipelineStackName": "${PipelineStackName}",
-                    "TEST": "HELLO_WORLD2"
+                    "PipelineStackName": "${PipelineStackName}"
                   }
               InputArtifacts:
                 - Name: SourceCodeAsZip
