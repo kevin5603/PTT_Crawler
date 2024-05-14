@@ -108,7 +108,10 @@ Resources:
                 TemplatePath: SourceCodeAsZip::infrastructure/codepipeline.yml
                 Capabilities: CAPABILITY_NAMED_IAM
                 ParameterOverrides: !Sub |
-                  {"PipelineStackName": "${PipelineStackName}"}
+                  {
+                    "PipelineStackName": "${PipelineStackName}",
+                    "TEST": "HELLO_WORLD2"
+                  }
               InputArtifacts:
                 - Name: SourceCodeAsZip
               RunOrder: 1
