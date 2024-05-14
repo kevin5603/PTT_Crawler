@@ -68,8 +68,8 @@ public class ArticleMatcherHandler implements RequestHandler<Map<String, Object>
     return null;
   }
 
-  // TODO 把已經發送過的存起來，下次就不需要再傳
   private void addToHistory(List<LineNotifyDto> lineNotifyDtos) {
+    articleService.addHistory(lineNotifyDtos);
 
   }
 
