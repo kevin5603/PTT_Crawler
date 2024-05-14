@@ -4,7 +4,6 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kevin.crawler.config.InitializeConfiguration;
 import com.kevin.crawler.model.Crawl;
 import com.kevin.crawler.model.KeywordCondition;
 import com.kevin.crawler.model.line.LineRequestBody;
@@ -21,6 +20,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Deprecated
 public class LambdaRequestHandler implements RequestHandler<Map<String, Object>, String> {
 
   private static final Logger log = LoggerFactory.getLogger(LambdaRequestHandler.class);
@@ -86,7 +86,6 @@ public class LambdaRequestHandler implements RequestHandler<Map<String, Object>,
   private CrawlController init(List<Crawl> crawls) throws Exception {
     List<String> boards = crawls.stream().map(Crawl::getBoard).distinct().toList();
 
-    InitializeConfiguration.initializeConfig();
     String crawlStorageFolder = "/tmp/data";
     CrawlConfig config = new CrawlConfig();
     config.setCrawlStorageFolder(crawlStorageFolder);

@@ -1,10 +1,8 @@
 package com.kevin.crawler.repository;
 
-import com.kevin.crawler.service.aws.AwsCredentialHelper;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
-import software.amazon.awssdk.identity.spi.IdentityProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
@@ -14,10 +12,7 @@ public abstract class DynamoDbEngine {
   private final DynamoDbEnhancedClient enhancedClient;
 
   public DynamoDbEngine() {
-    AwsCredentialHelper awsCredentialHelper = new AwsCredentialHelper();
-    IdentityProvider provider = awsCredentialHelper.getProvider();
     ddb = DynamoDbClient.builder()
-      .credentialsProvider(provider)
       .region(Region.US_WEST_2)
       .build();
     enhancedClient = DynamoDbEnhancedClient.builder()

@@ -4,12 +4,11 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.kevin.crawler.model.line.LineRequestBody;
 import com.kevin.crawler.model.line.dto.LineInfoDto;
 import com.kevin.crawler.service.line.LineCommandDispatcherService;
-import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -22,23 +21,12 @@ public class LineMessageHandler implements
   private final LineCommandDispatcherService lineCommandDispatcherService = new LineCommandDispatcherService();
 
   @Override
-  public APIGatewayProxyResponseEvent handleRequest(final APIGatewayProxyRequestEvent input,
-    final Context context) {
-    Map<String, String> headers = new HashMap<>();
-    headers.put("Content-Type", "application/json");
-    headers.put("X-Custom-Header", "application/json");
-    APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent()
-      .withHeaders(headers);
+  public APIGatewayProxyResponseEvent handleRequest(final APIGatewayProxyRequestEvent request, final Context context) {
+    APIGatewayProxyResponseEvent response = createAPIGatewayResponse();
     try {
       log.info("LineMessageHandler 開始執行...");
-      log.info("api input: {}", input);
-      String body = input.getBody();
-      ObjectMapper mapper = new ObjectMapper();
-      LineRequestBody request = mapper.readValue(body, LineRequestBody.class);
-      if (request != null && !request.getEvents().isEmpty()) {
-        LineInfoDto dto = request.toDto();
-        lineCommandDispatcherService.messageDispatcher(dto);
-      }
+      log.info("api request: {}", request);
+      processRequest(request);
     } catch (Exception e) {
       e.printStackTrace();
       String errorMessage = e.getMessage();
@@ -52,5 +40,23 @@ public class LineMessageHandler implements
     return response
       .withStatusCode(200)
       .withBody(output);
+  }
+
+  private void processRequest(APIGatewayProxyRequestEvent request) throws JsonProcessingException {
+    String body = request.getBody();
+    ObjectMapper mapper = new ObjectMapper();
+    LineRequestBody requestBody = mapper.readValue(body, LineRequestBody.class);
+    if (requestBody != null && !requestBody.getEvents().isEmpty()) {
+      LineInfoDto dto = requestBody.toDto();
+      lineCommandDispatcherService.messageDispatcher(dto);
+    }
+  }
+
+  private static APIGatewayProxyResponseEvent createAPIGatewayResponse() {
+    Map<String, String> headers = new HashMap<>();
+    headers.put("Content-Type", "application/json");
+    headers.put("X-Custom-Header", "application/json");
+    return new APIGatewayProxyResponseEvent()
+      .withHeaders(headers);
   }
 }

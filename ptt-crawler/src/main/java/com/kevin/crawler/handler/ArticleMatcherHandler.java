@@ -2,7 +2,6 @@ package com.kevin.crawler.handler;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.kevin.crawler.config.InitializeConfiguration;
 import com.kevin.crawler.service.ArticleCrawlerV2;
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.CrawlController;
@@ -56,7 +55,6 @@ public class ArticleMatcherHandler implements RequestHandler<Map<String, Object>
   }
 
   private CrawlController init(List<String> boards) throws Exception {
-    InitializeConfiguration.initializeConfig();
     String crawlStorageFolder = "/tmp/data";
     CrawlConfig config = new CrawlConfig();
     config.setCrawlStorageFolder(crawlStorageFolder);

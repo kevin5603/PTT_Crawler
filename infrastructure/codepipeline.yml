@@ -163,15 +163,41 @@ Resources:
                   ]
               InputArtifacts:
                 - Name: BuildArtifactAsZip
-  MyDynamoDbArn:
+  UserTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: hello
+      TableName: user
       KeySchema:
-        - AttributeName: lineId
+        - AttributeName: userId
           KeyType: HASH
       AttributeDefinitions:
-        - AttributeName: lineId
+        - AttributeName: userId
+          AttributeType: S
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+  KeywordTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: keyword
+      KeySchema:
+        - AttributeName: userId
+          KeyType: HASH
+      AttributeDefinitions:
+        - AttributeName: userId
+          AttributeType: S
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+  KeyWordHistoryTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: keywordHistory
+      KeySchema:
+        - AttributeName: userId
+          KeyType: HASH
+      AttributeDefinitions:
+        - AttributeName: userId
           AttributeType: S
       ProvisionedThroughput:
         ReadCapacityUnits: 1
@@ -340,4 +366,4 @@ Resources:
                 Resource: '*'
 Outputs:
   DynamoDbArn:
-    Value: !GetAtt MyDynamoDbArn.Arn
+    Value: !GetAtt KeywordTable.Arn
