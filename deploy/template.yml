@@ -105,6 +105,18 @@ Resources:
                   - 'dynamodb:*'
                 Effect: Allow
                 Resource: '*'
+        - PolicyName: AWSLambdaCloudWatch
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: 'logs:CreateLogGroup'
+                Resource: 'arn:aws:logs:*:*:*'
+              - Effect: Allow
+                Action:
+                  - 'logs:CreateLogStream'
+                  - 'logs:PutLogEvents'
+                Resource: 'arn:aws:logs:us-west-2:975049910219:log-group:/aws/lambda/ptt-crawler*'
 Outputs:
   PttCrawlerApi:
     Description: "API Gateway endpoint URL for Prod stage for Ptt Crawler function"
