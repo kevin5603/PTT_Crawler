@@ -6,24 +6,22 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbParti
 @DynamoDbBean
 public class Article {
 
-  private String id;
+  private String link;
   private String author;
   private String createdDate;
   private String title;
-  private String link;
   private String content;
   private String board;
 
   public Article() {
   }
 
-  public Article(String id, String author, String createdDate, String title, String link,
+  public Article(String author, String createdDate, String title, String link,
     String content, String board) {
-    this.id = id;
+    this.link = link;
     this.author = author;
     this.createdDate = createdDate;
     this.title = title;
-    this.link = link;
     this.content = content;
     this.board = board;
   }
@@ -31,23 +29,22 @@ public class Article {
   @Override
   public String toString() {
     return "Article{" +
-      "id='" + id + '\'' +
+      "link='" + link + '\'' +
       ", author='" + author + '\'' +
       ", createdDate='" + createdDate + '\'' +
       ", title='" + title + '\'' +
-      ", link='" + link + '\'' +
       ", content='" + content + '\'' +
       ", board='" + board + '\'' +
       '}';
   }
 
   @DynamoDbPartitionKey
-  public String getId() {
-    return id;
+  public String getLink() {
+    return link;
   }
 
-  public void setId(String id) {
-    this.id = id;
+  public void setLink(String link) {
+    this.link = link;
   }
 
   public String getAuthor() {
@@ -72,14 +69,6 @@ public class Article {
 
   public void setTitle(String title) {
     this.title = title;
-  }
-
-  public String getLink() {
-    return link;
-  }
-
-  public void setLink(String link) {
-    this.link = link;
   }
 
   public String getContent() {

@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO
 public class ArticleCrawlerV2 extends WebCrawler {
   private static final Logger log = LoggerFactory.getLogger(ArticleCrawlerV2.class);
   private final static Pattern FILTERS = Pattern.compile(".*(\\.(css|js|gif|jpg"

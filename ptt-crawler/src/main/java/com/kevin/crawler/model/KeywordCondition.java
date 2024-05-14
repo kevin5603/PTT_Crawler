@@ -20,6 +20,13 @@ public class KeywordCondition {
     this.keyword = keyword;
   }
 
+  // TODO currently only support query subject
+  public KeywordCondition(String userId, String keyword) {
+    this.keyword = keyword;
+    this.pttConditionType = 2;
+    this.userId = userId;
+  }
+
   @Override
   public String toString() {
     return "KeywordCondition{" +

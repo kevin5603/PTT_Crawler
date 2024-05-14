@@ -17,6 +17,7 @@ public class LineCommandDispatcherService {
 
   public void messageDispatcher(LineInfoDto dto) {
     String message = dto.getMessage().getText();
+    String userId = dto.getUserId();
     Matcher addKeywordMatch = Pattern.compile(LineConst.ADD_KEYWORD_PATTERN).matcher(message);
     Matcher removeKeywordMatch = Pattern.compile(LineConst.REMOVE_KEYWORD_PATTERN).matcher(message);
     Matcher helpMatch = Pattern.compile(LineConst.HELP_KEYWORD_PATTERN).matcher(message);
@@ -25,22 +26,22 @@ public class LineCommandDispatcherService {
       if (addKeywordMatch.matches()) {
         String board = addKeywordMatch.group();
         String keyword = addKeywordMatch.group(1);
-        log.info("userId: {} Add keyword '{}' to board '{}'", dto.getUserId(), keyword, board);
+        log.info("userId: {} Add keyword '{}' to board '{}'", userId, keyword, board);
 
-        keywordService.addKeyword(board, keyword);
+        keywordService.addKeyword(userId, board, keyword);
         sendReplyMessage(dto, LineConst.ADD_KEYWORD_SUCCESS);
       } else if (removeKeywordMatch.matches()) {
         String board = addKeywordMatch.group();
         String keyword = addKeywordMatch.group(1);
-        log.info("userId: {} Remove keyword '{}' to board '{}'", dto.getUserId(), keyword, board);
+        log.info("userId: {} Remove keyword '{}' to board '{}'", userId, keyword, board);
 
         sendReplyMessage(dto, LineConst.REMOVE_KEYWORD_SUCCESS);
-        keywordService.removeKeyword(board, keyword);
+        keywordService.removeKeyword(userId, board, keyword);
       } else if (helpMatch.matches()) {
         log.info("help message");
         sendReplyMessage(dto, LineConst.HELP_MESSAGE);
       } else {
-        log.info("user id: {} message: {}", dto.getUserId(), message);
+        log.info("user id: {} message: {}", userId, message);
         sendReplyMessage(dto, LineConst.NOT_MATCH_MESSAGE);
       }
     } catch (Exception e) {
