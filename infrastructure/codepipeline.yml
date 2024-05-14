@@ -159,12 +159,25 @@ Resources:
                   ]
               InputArtifacts:
                 - Name: BuildArtifactAsZip
+  MyDynamoDbArn:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: hello
+      KeySchema:
+        - AttributeName: lineId
+          KeyType: HASH
+      AttributeDefinitions:
+        - AttributeName: lineId
+          AttributeType: S
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
   PipelineArtifactsBucket:
     Type: AWS::S3::Bucket
     UpdateReplacePolicy: Retain
     Properties:
       VersioningConfiguration:
-        Status: Enabled
+        Status: Suspended
   BuildArtifactsBucket:
     Type: AWS::S3::Bucket
     UpdateReplacePolicy: Retain
@@ -319,3 +332,6 @@ Resources:
               - Effect: Allow
                 Action: '*'
                 Resource: '*'
+Outputs:
+  DynamoDbArn:
+    Value: !GetAtt MyDynamoDbArn.Arn
