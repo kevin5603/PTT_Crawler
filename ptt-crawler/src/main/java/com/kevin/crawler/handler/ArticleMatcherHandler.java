@@ -49,7 +49,6 @@ public class ArticleMatcherHandler implements RequestHandler<Map<String, Object>
     if (!lineNotifyDtos.isEmpty()) {
       log.info("發現有符合關鍵字的文章，發送訊息給使用者");
       addToHistory(lineNotifyDtos);
-      // 依序查詢是否有命中關鍵字，如果有則存到一個待發送物件(裡面應該要有lineId, ptt link, title)list
       notifyUser(lineNotifyDtos);
     }
 

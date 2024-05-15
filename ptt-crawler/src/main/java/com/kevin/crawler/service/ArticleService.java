@@ -28,8 +28,9 @@ public class ArticleService {
 
   public List<LineNotifyDto> filterBySentHistory(List<LineNotifyDto> lineNotifyDto) {
     List<SentHistory> allSentHistory = getAllSentHistory();
+
     return lineNotifyDto.stream()
-      .filter(dto -> !allSentHistory.contains(dto.getLineId() + "::" + dto.getLink())).toList();
+      .filter(dto -> !allSentHistory.stream().anyMatch(sentHistory -> sentHistory.getUserIdAndLinkId().equals(dto.getLineId() + "::" + dto.getLink()))).toList();
   }
 
   private List<SentHistory> getAllSentHistory() {

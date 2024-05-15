@@ -39,7 +39,6 @@ public class LineMessageHandler implements
       response.setStatusCode(500);
     }
     long end = System.currentTimeMillis();
-    log.info("uouo demo cicd");
     log.info("LineMessageHandler結束...耗時: {}秒", (end - start) / 1000.0);
     return response;
   }
