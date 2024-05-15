@@ -1,6 +1,7 @@
 package com.kevin.crawler.service.line;
 
 import com.kevin.crawler.model.LineConst;
+import com.kevin.crawler.model.line.LineMessage;
 import com.kevin.crawler.model.line.dto.LineInfoDto;
 import com.kevin.crawler.service.KeywordService;
 import com.linecorp.bot.messaging.model.TextMessage;
@@ -15,6 +16,13 @@ public class LineCommandDispatcherService {
   private final LineNotificationService lineNotificationService = new LineNotificationService();
   private final KeywordService keywordService = new KeywordService();
 
+  public static void main(String[] args) {
+    LineCommandDispatcherService l = new LineCommandDispatcherService();
+    LineInfoDto dto = new LineInfoDto();
+    dto.setMessage(new LineMessage("", "", "", "新增 joke 轉學2"));
+    l.messageDispatcher(dto);
+  }
+
   public void messageDispatcher(LineInfoDto dto) {
     String message = dto.getMessage().getText();
     String userId = dto.getUserId();
@@ -24,7 +32,7 @@ public class LineCommandDispatcherService {
 
     try {
       if (addKeywordMatch.matches()) {
-        String board = addKeywordMatch.group();
+        String board = addKeywordMatch.group(2);
         String keyword = addKeywordMatch.group(1);
         log.info("userId: {} Add keyword '{}' to board '{}'", userId, keyword, board);
 
