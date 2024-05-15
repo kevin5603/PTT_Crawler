@@ -19,7 +19,7 @@ public class LineCommandDispatcherService {
   public static void main(String[] args) {
     LineCommandDispatcherService l = new LineCommandDispatcherService();
     LineInfoDto dto = new LineInfoDto();
-    dto.setMessage(new LineMessage("", "", "", "新增 joke 轉學2"));
+    dto.setMessage(new LineMessage("", "", "", "刪除 KoreaStar LE SSERAFIM"));
     l.messageDispatcher(dto);
   }
 
@@ -40,8 +40,8 @@ public class LineCommandDispatcherService {
         String response = String.format(" 看板%s 新增關鍵字成功：%s", board, keyword);
         sendReplyMessage(dto, response);
       } else if (removeKeywordMatch.matches()) {
-        String board = addKeywordMatch.group(1);
-        String keyword = addKeywordMatch.group(2);
+        String board = removeKeywordMatch.group(1);
+        String keyword = removeKeywordMatch.group(2);
         log.info("userId: {} Remove keyword '{}' from board '{}'", userId, keyword, board);
 
         keywordService.removeKeyword(userId, board, keyword);
