@@ -24,6 +24,7 @@ public class KeywordService {
       log.info("user: {} keyword already exists: {}", userId, keyword);
     } else {
       key.getKeywordConditions().add(new KeywordCondition(userId, keyword));
+      key.setBoard(board);
       keywordRepository.saveItem(key);
       log.info("add finished...");
     }
