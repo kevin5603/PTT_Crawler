@@ -68,6 +68,9 @@ Resources:
       Source:
         Type: CODEPIPELINE
         BuildSpec: pipeline/buildspec_deploy.yml
+      Cache:
+        Type: S3
+        Location: !Ref BuildArtifactsBucket
   Pipeline:
     Type: AWS::CodePipeline::Pipeline
     Properties:
@@ -216,6 +219,7 @@ Resources:
   ProdArtifactBucket:
     Type: AWS::S3::Bucket
     UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
   CodePipelineExecutionRole:
     Type: AWS::IAM::Role
     Properties:

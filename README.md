@@ -76,6 +76,12 @@ lambda排程 (使用EventBridge 設定一分鐘爬一次)
 2. 重構查詢關鍵字 lambda logic
 3. line lambda logic -- 剩下DB的邏輯處理(還沒決定好DB要怎麼做)
 
+
+# Requirements
+- docker
+- aws cli
+- aws sam
+
 # create pipeline
 create pipeline
 ```
@@ -85,3 +91,10 @@ delete pipeline
 ```
 ./infrastructure/script/delete-pipeline-stack.sh $stackName $region
 ```
+
+如果source code出現以下錯誤請先到Connections確認GibHub是否已經webhook
+![img_1.png](img_1.png)
+
+github webhook confirm
+![img.png](img.png)
+
