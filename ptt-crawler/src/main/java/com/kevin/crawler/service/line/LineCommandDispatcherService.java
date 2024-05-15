@@ -32,19 +32,21 @@ public class LineCommandDispatcherService {
 
     try {
       if (addKeywordMatch.matches()) {
-        String board = addKeywordMatch.group(2);
-        String keyword = addKeywordMatch.group(1);
+        String board = addKeywordMatch.group(1);
+        String keyword = addKeywordMatch.group(2);
         log.info("userId: {} Add keyword '{}' to board '{}'", userId, keyword, board);
 
         keywordService.addKeyword(userId, board, keyword);
-        sendReplyMessage(dto, LineConst.ADD_KEYWORD_SUCCESS);
+        String response = String.format(" 看板%s 新增關鍵字成功：%s", board, keyword);
+        sendReplyMessage(dto, response);
       } else if (removeKeywordMatch.matches()) {
-        String board = addKeywordMatch.group();
-        String keyword = addKeywordMatch.group(1);
-        log.info("userId: {} Remove keyword '{}' to board '{}'", userId, keyword, board);
+        String board = addKeywordMatch.group(1);
+        String keyword = addKeywordMatch.group(2);
+        log.info("userId: {} Remove keyword '{}' from board '{}'", userId, keyword, board);
 
-        sendReplyMessage(dto, LineConst.REMOVE_KEYWORD_SUCCESS);
         keywordService.removeKeyword(userId, board, keyword);
+        String response = String.format(" 看板%s 刪除關鍵字成功：%s", board, keyword);
+        sendReplyMessage(dto, response);
       } else if (helpMatch.matches()) {
         log.info("help message");
         sendReplyMessage(dto, LineConst.HELP_MESSAGE);
