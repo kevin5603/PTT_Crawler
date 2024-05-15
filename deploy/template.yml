@@ -22,6 +22,15 @@ Resources:
       Layers:
         - !Ref PttCrawlerLayer
       Role: !GetAtt ExecutionLambdaRole.Arn
+      Events:
+        PttScheduler:
+          Type: ScheduleV2
+          Properties:
+            Name: 'ptt-crawler-schedule'
+            FlexibleTimeWindow:
+              Mode: 'OFF'
+            ScheduleExpression: 'cron(*/10 * * * ? *)'
+            ScheduleExpressionTimezone: 'Asia/Taipei'
     Metadata:
       BuildMethod: makefile
   ArticleMatcherFunction:
@@ -41,6 +50,15 @@ Resources:
       Layers:
         - !Ref PttCrawlerLayer
       Role: !GetAtt ExecutionLambdaRole.Arn
+      Events:
+        PttScheduler:
+          Type: ScheduleV2
+          Properties:
+            Name: 'article-matcher-schedule'
+            FlexibleTimeWindow:
+              Mode: 'OFF'
+            ScheduleExpression: 'cron(*/10 * * * ? *)'
+            ScheduleExpressionTimezone: 'Asia/Taipei'
     Metadata:
       BuildMethod: makefile
   LineHandlerFunction:
