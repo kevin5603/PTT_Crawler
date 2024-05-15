@@ -39,7 +39,6 @@ public class Article {
       ", author='" + author + '\'' +
       ", createdDate='" + createdDate + '\'' +
       ", title='" + title + '\'' +
-      ", content='" + content + '\'' +
       ", board='" + board + '\'' +
       '}';
   }

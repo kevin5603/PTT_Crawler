@@ -11,8 +11,8 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ArticleCrawlerV2 extends WebCrawler {
-  private static final Logger log = LoggerFactory.getLogger(ArticleCrawlerV2.class);
+public class ArticleCrawler extends WebCrawler {
+  private static final Logger log = LoggerFactory.getLogger(ArticleCrawler.class);
   private final static Pattern FILTERS = Pattern.compile(".*(\\.(css|js|gif|jpg"
     + "|png|mp3|mp4|zip|gz))$");
   private final PttArticleParser parser = new PttArticleParser();
@@ -37,11 +37,10 @@ public class ArticleCrawlerV2 extends WebCrawler {
       // 如果看板頁面則做解析當前文章link, 並且加入controller.seed
       String html = htmlParseData.getHtml();
       if (html.contains("r-ent")) {
-        list.addAll(parser.parseArticlesV2(html));
+        list.addAll(parser.parseArticles(html));
         list.forEach(article -> this.myController.addSeed(article.getLink()));
-        System.out.println(list);
+        log.info("url: {} article list: {}", url, list);
       } else {
-      // 如果是文章頁面則是解析全部內容，並且存到ＤＢ
         Article article = parser.parseArticle(html);
         articleService.save(article);
       }

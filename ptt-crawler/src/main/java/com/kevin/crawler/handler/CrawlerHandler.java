@@ -2,7 +2,7 @@ package com.kevin.crawler.handler;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.kevin.crawler.service.ArticleCrawlerV2;
+import com.kevin.crawler.service.ArticleCrawler;
 import com.kevin.crawler.service.KeywordService;
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.CrawlController;
@@ -28,7 +28,7 @@ public class CrawlerHandler implements RequestHandler<Map<String, Object>, Void>
     try {
       List<String> boards = keywordService.getAllBoard();
       CrawlController controller = this.initCrawlConfig(boards);
-      CrawlController.WebCrawlerFactory<ArticleCrawlerV2> factory = ArticleCrawlerV2::new;
+      CrawlController.WebCrawlerFactory<ArticleCrawler> factory = ArticleCrawler::new;
       controller.start(factory, 1);
     } catch (Exception e) {
       e.printStackTrace();
@@ -56,6 +56,7 @@ public class CrawlerHandler implements RequestHandler<Map<String, Object>, Void>
 
     for (String board : boards) {
       controller.addSeed(String.format("https://www.ptt.cc/bbs/%s/index.html", board));
+      log.info("爬蟲看板 board: {}", board);
     }
     return controller;
   }
