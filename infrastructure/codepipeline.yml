@@ -163,15 +163,15 @@ Resources:
                   ]
               InputArtifacts:
                 - Name: BuildArtifactAsZip
-  UserTable:
+  ArticleTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: user
+      TableName: article
       KeySchema:
-        - AttributeName: userId
+        - AttributeName: link
           KeyType: HASH
       AttributeDefinitions:
-        - AttributeName: userId
+        - AttributeName: link
           AttributeType: S
       ProvisionedThroughput:
         ReadCapacityUnits: 1
@@ -189,15 +189,15 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: 1
         WriteCapacityUnits: 1
-  KeyWordHistoryTable:
+  SentHistory:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: keywordHistory
+      TableName: senthistory
       KeySchema:
-        - AttributeName: userId
+        - AttributeName: userIdAndLinkId
           KeyType: HASH
       AttributeDefinitions:
-        - AttributeName: userId
+        - AttributeName: userIdAndLinkId
           AttributeType: S
       ProvisionedThroughput:
         ReadCapacityUnits: 1

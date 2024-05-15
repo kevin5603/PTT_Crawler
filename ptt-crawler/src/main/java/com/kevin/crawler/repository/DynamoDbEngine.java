@@ -30,4 +30,8 @@ public abstract class DynamoDbEngine {
       TableSchema.fromBean(getClazz()));
   }
 
+  protected DynamoDbClient getDynamoDbClient() {
+    return ddb;
+  }
+
 }

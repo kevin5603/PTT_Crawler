@@ -16,10 +16,11 @@ public class Article {
   public Article() {
   }
 
-  public Article(String link, String author, String title) {
+  public Article(String link, String author, String title, String board) {
     this.link = link;
     this.author = author;
     this.title = title;
+    this.board = board;
   }
 
   public Article(String author, String createdDate, String title, String link,

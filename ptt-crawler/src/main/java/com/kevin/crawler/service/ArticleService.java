@@ -16,7 +16,7 @@ public class ArticleService {
   private final SentHistoryRepository sentHistoryRepository = new SentHistoryRepository();
 
   public List<Article> getArticleByBoard(String board) {
-    return this.articleRepository.getAllItem();
+    return this.articleRepository.getArticlesByBoard(board);
   }
 
   public void addHistory(List<LineNotifyDto> lineNotifyDtos) {
@@ -39,5 +39,17 @@ public class ArticleService {
 
   public void save(Article article) {
     articleRepository.saveItem(article);
+  }
+
+  public void saveAll(List<Article> articles) {
+    articleRepository.saveAllItem(articles);
+  }
+
+  public Article getArticleByLink(String link) {
+    return articleRepository.getArticleByLink(link);
+  }
+
+  public Article updateArticle(Article article) {
+    return articleRepository.updateItem(article);
   }
 }

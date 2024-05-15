@@ -12,13 +12,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ArticleCrawler extends WebCrawler {
+
   private static final Logger log = LoggerFactory.getLogger(ArticleCrawler.class);
   private final static Pattern FILTERS = Pattern.compile(".*(\\.(css|js|gif|jpg"
     + "|png|mp3|mp4|zip|gz))$");
   private final PttArticleParser parser = new PttArticleParser();
   private final ArticleService articleService = new ArticleService();
-  private final List<Article> list = new ArrayList<>();
-
 
   @Override
   public boolean shouldVisit(Page referringPage, WebURL url) {
@@ -32,17 +31,17 @@ public class ArticleCrawler extends WebCrawler {
   public void visit(Page page) {
     String url = page.getWebURL().getURL();
     log.info("URL: {}", url);
-
     if (page.getParseData() instanceof HtmlParseData htmlParseData) {
       // 如果看板頁面則做解析當前文章link, 並且加入controller.seed
       String html = htmlParseData.getHtml();
       if (html.contains("r-ent")) {
-        list.addAll(parser.parseArticles(html));
-        list.forEach(article -> this.myController.addSeed(article.getLink()));
-        log.info("url: {} article list: {}", url, list);
+        List<Article> articles = new ArrayList<>();
+        articles.addAll(parser.parseArticles(html));
+        articles.forEach(article -> getMyController().addSeed(article.getLink()));
+        articleService.saveAll(articles);
+        log.info("url: {} article list: {}", url, articles);
       } else {
-        Article article = parser.parseArticle(html);
-        articleService.save(article);
+        parser.parseArticle(html);
       }
     }
   }

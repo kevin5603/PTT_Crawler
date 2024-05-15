@@ -16,37 +16,31 @@ public class PttArticleParser {
 
   private static final Logger log = LoggerFactory.getLogger(PttArticleParser.class);
   private static final String URL_PREFIX = "https://www.ptt.cc";
+  private final ArticleService articleService = new ArticleService();
 
   public Article parseArticle(String html) {
-    String tag = "div.article-metaline span.article-meta-value";
     Document doc = Jsoup.parse(html);
-
-    Article article = new Article();
+    String link = doc.select("link[rel=canonical]").attr("href");
+    Article article = articleService.getArticleByLink(link);
 
     Elements pttArticle = doc.select("div#main-content");
-
-    if (!pttArticle.select("div.article-metaline").isEmpty()) {
-      String author = doc.select(tag).first().ownText().replaceAll("\\(.*?\\)", "").trim();
-      String title = doc.select(tag).get(1).ownText();
-      article.setAuthor(author);
-      article.setTitle(title);
-    }
     String content = parseContent(pttArticle);
-    String link = doc.select("span.f2 a").attr("href");
     article.setLink(link);
     article.setContent(content);
+    articleService.updateArticle(article);
     return article;
   }
 
   public List<Article> parseArticles(String html) {
     List<Article> list = new ArrayList<>();
     Document doc = Jsoup.parse(html);
+    String board = doc.select("a.board").getFirst().ownText();
     Elements elements = doc.select("div.r-ent");
     for (Element element : elements) {
       String link = URL_PREFIX + element.select("div.title a").attr("href");
       String author = element.select("div.meta div.author").text();
       String title = element.select("div.title a").text();
-      list.add(new Article(link, author, title));
+      list.add(new Article(link, author, title, board));
     }
     return list;
   }
