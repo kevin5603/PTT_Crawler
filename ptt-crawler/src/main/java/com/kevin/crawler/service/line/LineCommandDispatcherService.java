@@ -29,28 +29,32 @@ public class LineCommandDispatcherService {
     Matcher addKeywordMatch = Pattern.compile(LineConst.ADD_KEYWORD_PATTERN).matcher(message);
     Matcher removeKeywordMatch = Pattern.compile(LineConst.REMOVE_KEYWORD_PATTERN).matcher(message);
     Matcher helpMatch = Pattern.compile(LineConst.HELP_KEYWORD_PATTERN).matcher(message);
+    Matcher showKeywordMatch = Pattern.compile(LineConst.SHOW_KEYWORD_PATTERN).matcher(message);
+
 
     try {
       if (addKeywordMatch.matches()) {
         String board = addKeywordMatch.group(1);
         String keyword = addKeywordMatch.group(2);
-        log.info("userId: {} Add keyword '{}' to board '{}'", userId, keyword, board);
-
+        log.info("userId: {} Add the keyword '{}' to the board '{}'", userId, keyword, board);
         keywordService.addKeyword(userId, board, keyword);
-        String response = String.format(" 看板%s 新增關鍵字成功：%s", board, keyword);
+        String response = String.format("Add the keyword: '%s' to the '%s' board", keyword, board);
         sendReplyMessage(dto, response);
       } else if (removeKeywordMatch.matches()) {
         String board = removeKeywordMatch.group(1);
         String keyword = removeKeywordMatch.group(2);
-        log.info("userId: {} Remove keyword '{}' from board '{}'", userId, keyword, board);
-
+        log.info("userId: {} Remove the keyword '{}' from the board '{}'", userId, keyword, board);
         keywordService.removeKeyword(userId, board, keyword);
-        String response = String.format(" 看板%s 刪除關鍵字成功：%s", board, keyword);
+        String response = String.format("Remove the keyword: '%s' from the '%s' board", keyword, board);
         sendReplyMessage(dto, response);
       } else if (helpMatch.matches()) {
-        log.info("help message");
+        log.info("send help message");
         sendReplyMessage(dto, LineConst.HELP_MESSAGE);
-      } else {
+      } else if (showKeywordMatch.matches()) {
+        log.info("show keyword");
+        String keywordList = keywordService.showKeywordList(userId);
+        sendReplyMessage(dto, keywordList);
+      }else {
         log.info("user id: {} message: {}", userId, message);
         sendReplyMessage(dto, LineConst.NOT_MATCH_MESSAGE);
       }

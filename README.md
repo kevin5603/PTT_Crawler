@@ -77,10 +77,24 @@ lambda排程 (使用EventBridge 設定一分鐘爬一次)
 3. line lambda logic -- 剩下DB的邏輯處理(還沒決定好DB要怎麼做)
 
 
+# Architecture
+
+pipeline
+
+![img_1.png](img_3.png)
+
+function
+
+![img.png](img_2.png)
+
+
 # Requirements
 - docker
 - aws cli
 - aws sam
+- Line messaging api access token(https://developers.line.biz/zh-hant/)
+
+
 
 # create pipeline
 create pipeline
@@ -95,6 +109,6 @@ delete pipeline
 如果source code出現以下錯誤請先到Connections確認GibHub是否已經webhook
 ![img_1.png](img_1.png)
 
-github webhook confirm
+GitHub webhook confirm
 ![img.png](img.png)
 
