@@ -55,6 +55,9 @@ Resources:
       Source:
         Type: CODEPIPELINE
         BuildSpec: pipeline/buildspec_build_package.yml
+      Cache:
+        Type: S3
+        Location: !Ref BuildArtifactsBucket
   CodeBuildProjectDeploy:
     Type: AWS::CodeBuild::Project
     Properties:
