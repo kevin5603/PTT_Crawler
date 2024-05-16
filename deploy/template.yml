@@ -22,6 +22,7 @@ Resources:
       Layers:
         - !Ref PttCrawlerLayer
       Role: !GetAtt ExecutionLambdaRole.Arn
+      Timeout: 120
       Events:
         PttScheduler:
           Type: ScheduleV2
@@ -50,6 +51,7 @@ Resources:
       Layers:
         - !Ref PttCrawlerLayer
       Role: !GetAtt ExecutionLambdaRole.Arn
+      Timeout: 120
       Events:
         PttScheduler:
           Type: ScheduleV2

@@ -5,6 +5,7 @@ phases:
       java: corretto21
   build:
     commands:
+      - ls -al
       - dynamoDbArn=$(aws cloudformation describe-stacks --stack-name ${DEPLOY_PIPELINE_STACK_NAME} --query 'Stacks[0].Outputs[?OutputKey == `DynamoDbArn`].OutputValue' --output text)
       - sam build --template ${SAM_DEPLOY_TEMPLATE_PATH}
       - ./assume-role.sh ${BUILD_PIPELINE_EXECUTION_ROLE} build-package
