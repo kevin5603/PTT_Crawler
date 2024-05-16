@@ -184,10 +184,10 @@ Resources:
     Properties:
       TableName: keyword
       KeySchema:
-        - AttributeName: userId
+        - AttributeName: board
           KeyType: HASH
       AttributeDefinitions:
-        - AttributeName: userId
+        - AttributeName: board
           AttributeType: S
       ProvisionedThroughput:
         ReadCapacityUnits: 1
@@ -209,9 +209,6 @@ Resources:
     Type: AWS::S3::Bucket
     UpdateReplacePolicy: Retain
     DeletionPolicy: Retain
-    Properties:
-      VersioningConfiguration:
-        Status: Suspended
   BuildArtifactsBucket:
     Type: AWS::S3::Bucket
     UpdateReplacePolicy: Retain

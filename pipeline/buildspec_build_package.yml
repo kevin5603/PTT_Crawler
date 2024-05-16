@@ -6,7 +6,6 @@ phases:
   build:
     commands:
       - dynamoDbArn=$(aws cloudformation describe-stacks --stack-name ${DEPLOY_PIPELINE_STACK_NAME} --query 'Stacks[0].Outputs[?OutputKey == `DynamoDbArn`].OutputValue' --output text)
-      - echo my dynamoDbArn is ${dynamoDbArn}
       - sam build --template ${SAM_DEPLOY_TEMPLATE_PATH}
       - ./assume-role.sh ${BUILD_PIPELINE_EXECUTION_ROLE} build-package
       - sam package --s3-bucket ${BUILD_ARTIFACT_BUCKET}
