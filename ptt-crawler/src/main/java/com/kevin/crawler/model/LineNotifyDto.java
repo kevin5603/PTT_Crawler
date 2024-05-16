@@ -5,14 +5,16 @@ public class LineNotifyDto {
   private String lineId;
   private String title;
   private String link;
+  private String author;
 
   public LineNotifyDto() {
   }
 
-  public LineNotifyDto(String lineId, String title, String link) {
+  public LineNotifyDto(String lineId, String title, String link, String author) {
     this.lineId = lineId;
     this.title = title;
     this.link = link;
+    this.author = author;
   }
 
   public String getLineId() {
@@ -37,5 +39,13 @@ public class LineNotifyDto {
 
   public void setLink(String link) {
     this.link = link;
+  }
+
+  public String getAuthor() {
+    return author;
+  }
+
+  public void setAuthor(String author) {
+    this.author = author;
   }
 }

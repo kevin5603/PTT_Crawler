@@ -75,7 +75,7 @@ public class ArticleMatcherHandler implements RequestHandler<Map<String, Object>
           keywordConditions.forEach(keywordCondition -> {
             if (title.contains(keywordCondition.getKeyword().toLowerCase())) {
               lineNotifyDtos.add(new LineNotifyDto(keywordCondition.getUserId(), article.getTitle(),
-                article.getLink()));
+                article.getLink(), article.getAuthor()));
             }
           });
         });
@@ -87,7 +87,7 @@ public class ArticleMatcherHandler implements RequestHandler<Map<String, Object>
   private void notifyUser(List<LineNotifyDto> list) {
     Map<String, String> map = list.stream()
       .collect(Collectors.toMap(
-        LineNotifyDto::getLineId, l -> String.format("%s\r\n%s", l.getTitle(), l.getLink()),
+        LineNotifyDto::getLineId, l -> String.format("%s\r\n%s\r\n%s", l.getTitle(), l.getAuthor(), l.getLink()),
         (a, b) -> String.join("\r\n=========\r\n", a, b)
       ));
 
