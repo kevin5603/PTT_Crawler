@@ -15,7 +15,7 @@ artifacts:
   files:
     - ${ENV_PACKAGE_TEMPLATE}
     - assume-role.sh
-    - pipeline/*
+    - infrastructure/pipeline/*
 cache:
   paths:
     - '/root/.m2/**/*'
