@@ -16,13 +16,6 @@ public class LineCommandDispatcherService {
   private final LineNotificationService lineNotificationService = new LineNotificationService();
   private final KeywordService keywordService = new KeywordService();
 
-  public static void main(String[] args) {
-    LineCommandDispatcherService l = new LineCommandDispatcherService();
-    LineInfoDto dto = new LineInfoDto();
-    dto.setMessage(new LineMessage("", "", "", "刪除 KoreaStar LE SSERAFIM"));
-    l.messageDispatcher(dto);
-  }
-
   public void messageDispatcher(LineInfoDto dto) {
     String message = dto.getMessage().getText();
     String userId = dto.getUserId();
@@ -30,7 +23,6 @@ public class LineCommandDispatcherService {
     Matcher removeKeywordMatch = Pattern.compile(LineConst.REMOVE_KEYWORD_PATTERN).matcher(message);
     Matcher helpMatch = Pattern.compile(LineConst.HELP_KEYWORD_PATTERN).matcher(message);
     Matcher showKeywordMatch = Pattern.compile(LineConst.SHOW_KEYWORD_PATTERN).matcher(message);
-
 
     try {
       if (addKeywordMatch.matches()) {

@@ -3,6 +3,7 @@ package com.kevin.crawler.repository.impl;
 import static software.amazon.awssdk.enhanced.dynamodb.internal.AttributeValues.stringValue;
 
 import com.kevin.crawler.model.Article;
+import com.kevin.crawler.model.Keyword;
 import com.kevin.crawler.repository.DynamoDbRepository;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +32,5 @@ public class ArticleRepository extends DynamoDbRepository<Article, String> {
         .build())
       .build();
     return table.scan(request).items().stream().toList();
-
-
   }
 }
