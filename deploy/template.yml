@@ -1,0 +1,143 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Sample SAM Template for ptt crawler lambda & API endpoint
+Globals:
+  Function:
+    Timeout: 20
+    MemorySize: 512
+Resources:
+  PttCrawlerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../ptt-crawler
+      Handler: com.kevin.crawler.handler.CrawlerHandler::handleRequest
+      Runtime: java21
+      Architectures:
+        - arm64
+      MemorySize: 256
+      Environment:
+        Variables:
+          JAVA_TOOL_OPTIONS: '--add-opens=java.management/sun.management=ALL-UNNAMED'
+      Layers:
+        - !Ref PttCrawlerLayer
+      Role: !GetAtt ExecutionLambdaRole.Arn
+      Timeout: 120
+      Events:
+        PttScheduler:
+          Type: ScheduleV2
+          Properties:
+            Name: 'ptt-crawler-schedule'
+            FlexibleTimeWindow:
+              Mode: 'OFF'
+            ScheduleExpression: 'cron(*/10 * * * ? *)'
+            ScheduleExpressionTimezone: 'Asia/Taipei'
+    Metadata:
+      BuildMethod: makefile
+  ArticleMatcherFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../ptt-crawler
+      Handler: com.kevin.crawler.handler.ArticleMatcherHandler::handleRequest
+      Runtime: java21
+      Architectures:
+        - arm64
+      MemorySize: 256
+      Environment:
+        Variables:
+          JAVA_TOOL_OPTIONS: '--add-opens=java.management/sun.management=ALL-UNNAMED'
+          CHANNEL_TOKEN: '{{resolve:ssm:/line/CHANNEL_TOKEN}}'
+          CHANNEL_SECRET: '{{resolve:ssm:/line/CHANNEL_SECRET}}'
+      Layers:
+        - !Ref PttCrawlerLayer
+      Role: !GetAtt ExecutionLambdaRole.Arn
+      Timeout: 120
+      Events:
+        PttScheduler:
+          Type: ScheduleV2
+          Properties:
+            Name: 'article-matcher-schedule'
+            FlexibleTimeWindow:
+              Mode: 'OFF'
+            ScheduleExpression: 'cron(*/10 * * * ? *)'
+            ScheduleExpressionTimezone: 'Asia/Taipei'
+    Metadata:
+      BuildMethod: makefile
+  LineHandlerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../ptt-crawler
+      Handler: com.kevin.crawler.handler.LineMessageHandler::handleRequest
+      Runtime: java21
+      Architectures:
+      - arm64
+      MemorySize: 256
+      Environment:
+        Variables:
+          JAVA_TOOL_OPTIONS: '--add-opens=java.management/sun.management=ALL-UNNAMED'
+          CHANNEL_TOKEN: '{{resolve:ssm:/line/CHANNEL_TOKEN}}'
+          CHANNEL_SECRET: '{{resolve:ssm:/line/CHANNEL_SECRET}}'
+      Events:
+        PttCrawlerApi:
+          Type: Api
+          Properties:
+            Path: /ptt
+            Method: POST
+      Layers:
+        - !Ref PttCrawlerLayer
+      Role: !GetAtt ExecutionLambdaRole.Arn
+    Metadata:
+      BuildMethod: makefile
+  PttCrawlerLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      ContentUri: ../ptt-crawler-lib
+      CompatibleRuntimes:
+        - java21
+    Metadata:
+      BuildMethod: makefile
+  ExecutionLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: [ 'sts:AssumeRole' ]
+            Effect: 'Allow'
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+        Version: '2012-10-17'
+      Path: /
+      Policies:
+        - PolicyName: CodePipelineAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Action:
+                  - 'lambda:*'
+                Effect: Allow
+                Resource: '*'
+        - PolicyName: DynamoDbAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Action:
+                  - 'dynamodb:*'
+                Effect: Allow
+                Resource: '*'
+        - PolicyName: AWSLambdaCloudWatch
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: 'logs:CreateLogGroup'
+                Resource: 'arn:aws:logs:*:*:*'
+              - Effect: Allow
+                Action:
+                  - 'logs:CreateLogStream'
+                  - 'logs:PutLogEvents'
+                Resource: 'arn:aws:logs:us-west-2:975049910219:log-group:/aws/lambda/ptt-crawler*'
+Outputs:
+  PttCrawlerApi:
+    Description: "API Gateway endpoint URL for Prod stage for Ptt Crawler function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/ptt/"

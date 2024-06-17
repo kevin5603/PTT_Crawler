@@ -1,12 +1,11 @@
 package com.kevin.crawler.model.line;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kevin.crawler.model.line.dto.LineInfoDto;
 import java.util.List;
 
 public class LineRequestBody {
+
   private String destination;
-  @JsonProperty(value = "events")
   private List<LineEvent> events;
 
   public LineRequestBody() {
@@ -44,7 +43,8 @@ public class LineRequestBody {
   // TODO 尚未完成 測試
   public LineInfoDto toDto() {
     List<LineInfoDto> list = this.events.stream().map(event ->
-      new LineInfoDto(event.getMessage(), event.getSource().getUserId(), event.getReplyToken())).toList();
+        new LineInfoDto(event.getMessage(), event.getSource().getUserId(), event.getReplyToken()))
+      .toList();
     return list.getFirst();
   }
 

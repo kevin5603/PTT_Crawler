@@ -1,0 +1,21 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      java: corretto21
+  build:
+    commands:
+      - dynamoDbArn=$(aws cloudformation describe-stacks --stack-name ${DEPLOY_PIPELINE_STACK_NAME} --query 'Stacks[0].Outputs[?OutputKey == `DynamoDbArn`].OutputValue' --output text)
+      - sam build --template ${SAM_DEPLOY_TEMPLATE_PATH}
+      - ./assume-role.sh build-package
+      - sam package --s3-bucket ${BUILD_ARTIFACT_BUCKET}
+        --region ${BUILD_REGION}
+        --output-template-file ${ENV_PACKAGE_TEMPLATE}
+artifacts:
+  files:
+    - ${ENV_PACKAGE_TEMPLATE}
+    - assume-role.sh
+    - infrastructure/pipeline/*
+cache:
+  paths:
+    - '/root/.m2/**/*'

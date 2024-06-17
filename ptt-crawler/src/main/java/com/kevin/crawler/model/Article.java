@@ -6,45 +6,53 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbParti
 @DynamoDbBean
 public class Article {
 
-  private String id;
+  private String link;
   private String author;
   private String createdDate;
   private String title;
-  private String link;
   private String content;
+  private String board;
+  private Long expire;
 
   public Article() {
   }
 
-  public Article(String id, String author, String createdDate, String title, String link,
-    String content) {
-    this.id = id;
+  public Article(String link, String author, String title, String board, Long expire) {
+    this.link = link;
+    this.author = author;
+    this.title = title;
+    this.board = board;
+    this.expire = expire;
+  }
+
+  public Article(String author, String createdDate, String title, String link,
+    String content, String board) {
+    this.link = link;
     this.author = author;
     this.createdDate = createdDate;
     this.title = title;
-    this.link = link;
     this.content = content;
+    this.board = board;
   }
 
   @Override
   public String toString() {
     return "Article{" +
-      "id='" + id + '\'' +
+      "link='" + link + '\'' +
       ", author='" + author + '\'' +
       ", createdDate='" + createdDate + '\'' +
       ", title='" + title + '\'' +
-      ", link='" + link + '\'' +
-      ", content='" + content + '\'' +
+      ", board='" + board + '\'' +
       '}';
   }
 
   @DynamoDbPartitionKey
-  public String getId() {
-    return id;
+  public String getLink() {
+    return link;
   }
 
-  public void setId(String id) {
-    this.id = id;
+  public void setLink(String link) {
+    this.link = link;
   }
 
   public String getAuthor() {
@@ -71,19 +79,27 @@ public class Article {
     this.title = title;
   }
 
-  public String getLink() {
-    return link;
-  }
-
-  public void setLink(String link) {
-    this.link = link;
-  }
-
   public String getContent() {
     return content;
   }
 
   public void setContent(String content) {
     this.content = content;
+  }
+
+  public String getBoard() {
+    return board;
+  }
+
+  public void setBoard(String board) {
+    this.board = board;
+  }
+
+  public Long getExpire() {
+    return expire;
+  }
+
+  public void setExpire(Long expire) {
+    this.expire = expire;
   }
 }

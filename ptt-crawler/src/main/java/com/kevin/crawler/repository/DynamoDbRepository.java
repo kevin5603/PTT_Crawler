@@ -7,8 +7,7 @@ import org.slf4j.LoggerFactory;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.Key;
 
-public abstract class DynamoDbRepository<T, R> extends DynamoDbEngine implements
-  DynamoDbCrud<T, R> {
+public abstract class DynamoDbRepository<T, R> extends DynamoDbEngine implements DynamoDbCrud<T, R> {
 
   private static final Logger log = LoggerFactory.getLogger(DynamoDbRepository.class);
 
@@ -34,6 +33,14 @@ public abstract class DynamoDbRepository<T, R> extends DynamoDbEngine implements
     DynamoDbTable<T> table = getTable();
     table.putItem(item);
     return item;
+  }
+
+  @Override
+  public List<T> saveAllItem(List<T> items) {
+    for(T item : items) {
+      saveItem(item);
+    }
+    return items;
   }
 
   @Override
