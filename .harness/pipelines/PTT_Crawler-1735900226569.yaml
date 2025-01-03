@@ -23,18 +23,12 @@ pipeline:
                   identifier: echo
                   name: echo
                   spec:
-                    command: echo hello world
-                  timeout: ""
-                  type: Run
-              - step:
-                  type: Run
-                  name: maven
-                  identifier: maven
-                  spec:
                     shell: Sh
                     command: |-
-                      echo "run mavne build !!!"
-                      mvn clean package
+                      ls -al
+                      echo hello world
+                  timeout: ""
+                  type: Run
           platform:
             os: MacOS
             arch: Arm64
