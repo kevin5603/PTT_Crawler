@@ -38,7 +38,7 @@ pipeline:
                     command: |-
                       echo "prepare build project..."
                       ls -al
-                      ehcho "cd to ptt-crawler folder..."
+                      echo "cd to ptt-crawler folder..."
                       cd ptt-crawler
                       mvn clean package
           platform:
