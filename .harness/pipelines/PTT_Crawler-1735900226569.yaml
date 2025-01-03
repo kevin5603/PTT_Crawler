@@ -29,6 +29,18 @@ pipeline:
                       echo hello world
                   timeout: ""
                   type: Run
+              - step:
+                  type: Run
+                  name: maven build
+                  identifier: maven_build
+                  spec:
+                    shell: Sh
+                    command: |-
+                      echo "prepare build project..."
+                      ls -al
+                      ehcho "cd to ptt-crawler folder..."
+                      cd ptt-crawler
+                      mvn clean package
           platform:
             os: MacOS
             arch: Arm64
