@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_kevin5603_PTT_Crawler_1735900232534-push-trigger-input-set
+  identifier: Build_kevin5603_PTT_Crawler_1735900232534pushtriggerinputset
+  orgIdentifier: default
+  projectIdentifier: default_project
+  pipeline:
+    identifier: Build_kevin5603_PTT_Crawler_1735900232534
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: <+trigger.branch>
